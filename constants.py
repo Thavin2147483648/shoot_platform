@@ -4,8 +4,18 @@ class Basic:
 
 
 class Screen:
-    WIDTH = 1000
-    HEIGHT = 600
+    WIDTH = 960
+    HEIGHT = 800
+
+
+class Cell:
+    WIDTH = 80
+    HEIGHT = 80
+
+
+class Pixel:
+    WIDTH = 4
+    HEIGHT = 4
 
 
 class Color:
@@ -14,11 +24,18 @@ class Color:
 
 
 class MainCharacter:
-    WIDTH = 75
-    HEIGHT = 150
-    JUMP_HEIGHT = 190
+    WIDTH = 48
+    HEIGHT = 96
+    JUMP_HEIGHT = 3 * Cell.HEIGHT + 30
     X_SPEED = 8
+    IMAGE_PATH = 'textures/main_character.png'
 
 
 class Gravitation:
-    G = 0.7
+    G = 1
+
+
+class Platform:
+    WIDTH = Cell.WIDTH
+    HEIGHT = Cell.HEIGHT // 2
+    IMAGE_PATH = 'textures/ground.png'

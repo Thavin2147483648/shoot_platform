@@ -30,6 +30,7 @@ class Game:
         return self.scenes[self.scene_index]
 
     def update(self):
+        t = pg.time.get_ticks()
         events = pg.event.get()
         for event in events:
             if event.type == pg.QUIT:
@@ -37,5 +38,5 @@ class Game:
         self.screen.fill(Color.WHITE)
         self.get_scene().process_logic(events)
         self.get_scene().render()
-        pg.display.update()
-        pg.time.delay(Basic.FRAME_DELAY)
+        pg.display.flip()
+        pg.time.delay(Basic.FRAME_DELAY - (pg.time.get_ticks() - t))

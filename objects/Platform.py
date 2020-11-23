@@ -1,15 +1,18 @@
 import pygame as pg
-from constants import Color
+from constants import Color, Cell, Platform as Properties
 from models.GameObject import GameObject
+from functions import custom_round
 
 
 class Platform(GameObject):
-    def __init__(self, scene, index, name, pos, size):
-        super().__init__(scene, index, name)
-        self.width = size[0]
-        self.height = size[1]
-        self.x = pos[0]
-        self.y = pos[1]
+    def __init__(self, scene, cell_pos, cell_w):
+        super().__init__(scene)
+        self.width = Properties.WIDTH
+        self.height = Properties.HEIGHT
+        self.x = cell_pos[0] * Cell.WIDTH
+        self.y = cell_pos[1] * Cell.HEIGHT
+        self.image = pg.image.load(Properties.IMAGE_PATH)
+        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
 
     def process_logic(self, events):
         pass

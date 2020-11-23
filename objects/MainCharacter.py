@@ -1,7 +1,8 @@
 import pygame as pg
 from math import sqrt
+
+from models.Animation import Animation
 from models.GameObject import GameObject
-from objects.Platform import Platform
 from constants import MainCharacter as Properties, Color, Screen, Gravitation
 from functions import custom_round
 
@@ -13,10 +14,18 @@ class MainCharacter(GameObject):
         self.height = Properties.HEIGHT
         self.x = 50
         self.y = 0
-        self.image = pg.image.load(Properties.IMAGE_PATH)
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
         self.speed_y = 0
         self.speed_x = 0
+        anim_path = 'textures/animations/main_character'
+        self.animation = Animation(self, {
+            'none': ((Properties.IMAGE_PATH, 1),),
+            'walk_right': ((anim_path + '/walk_right_0.png', 15), (anim_path + '/walk_right_1.png', 15)),
+            'walk_left': ((anim_path + '/walk_left_0.png', 15), (anim_path + '/walk_left_1.png', 15)),
+            'jump_right': ((anim_path + '/walk_right_1.png', 1),),
+            'jump_left': ((anim_path + '/walk_left_1.png', 1),),
+        }, 'none')
+        self.image = self.animation.get_current_image()
 
     def is_grounded(self):
         if self.speed_y < 0:
@@ -56,6 +65,10 @@ class MainCharacter(GameObject):
                     self.speed_x = 0
         self.x += vector_x
 
+    def update_sprite(self):
+        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+        self.image = self.animation.update()
+
     def process_logic(self, events):
         pressed = pg.key.get_pressed()
         if pressed[pg.K_a]:
@@ -70,5 +83,18 @@ class MainCharacter(GameObject):
         vector_x = custom_round(self.speed_x)
         vector_y = custom_round(self.speed_y)
         self.add_vectors(vector_x, vector_y)
+        if custom_round(self.speed_x) != 0:
+            if self.speed_x > 0:
+                if self.is_grounded():
+                    self.animation.set_animation('walk_right')
+                else:
+                    self.animation.set_animation('jump_right')
+            else:
+                if self.is_grounded():
+                    self.animation.set_animation('walk_left')
+                else:
+                    self.animation.set_animation('jump_left')
+        else:
+            self.animation.set_animation('none')
         self.speed_x = 0
-        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+        self.update_sprite()

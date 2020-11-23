@@ -8,6 +8,7 @@ class Game:
         self.scene_index = 0
         self.screen = None
         self.scenes = []
+        self.frames_cnt = 0
 
     def init(self):
         pg.init()
@@ -39,4 +40,8 @@ class Game:
         self.get_scene().process_logic(events)
         self.get_scene().render()
         pg.display.flip()
+        self.frames_cnt += 1
         pg.time.delay(Basic.FRAME_DELAY - (pg.time.get_ticks() - t))
+
+    def get_frames(self):
+        return self.frames_cnt

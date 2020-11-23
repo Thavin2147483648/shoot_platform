@@ -28,7 +28,7 @@ class MainCharacter:
     HEIGHT = 96
     JUMP_HEIGHT = 3 * Cell.HEIGHT + 30
     X_SPEED = 8
-    IMAGE_PATH = 'textures/main_character.png'
+    IMAGE_PATH = 'textures/animations/main_character/none.png'
 
 
 class Gravitation:

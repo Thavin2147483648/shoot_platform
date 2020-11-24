@@ -2,18 +2,15 @@ import pygame as pg
 from math import sqrt
 
 from models.Animation import Animation
-from models.GameObject import GameObject
+from models.LevelObject import LevelObject
+from models.LevelScene import LevelScene
 from constants import MainCharacter as Properties, Color, Screen, Gravitation
 from functions import custom_round
 
 
-class MainCharacter(GameObject):
-    def __init__(self, scene):
-        super().__init__(scene)
-        self.width = Properties.WIDTH
-        self.height = Properties.HEIGHT
-        self.x = 50
-        self.y = 0
+class MainCharacter(LevelObject):
+    def __init__(self, scene: LevelScene, x=50, y=0, width=Properties.WIDTH, height=Properties.HEIGHT):
+        super().__init__(scene, x, y, width, height)
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
         self.speed_y = 0
         self.speed_x = 0
@@ -30,7 +27,7 @@ class MainCharacter(GameObject):
     def is_grounded(self):
         if self.speed_y < 0:
             return False
-        if self.y + self.height >= Screen.HEIGHT:
+        if self.y + self.height >= self.scene.height:
             return True
         for obj in self.scene.groups['platforms'].sprites():
             if self.x + self.width - 1 >= obj.x and self.x <= obj.x + obj.width - 1 and self.y + self.height == obj.y:
@@ -39,8 +36,8 @@ class MainCharacter(GameObject):
 
     def add_vectors(self, vector_x, vector_y):
         # Oy
-        if vector_y < -self.y or vector_y > Screen.HEIGHT - self.height - self.y:
-            vector_y = sorted([-self.y, vector_y, Screen.HEIGHT - self.height - self.y])[1]
+        if vector_y < -self.y or vector_y > self.scene.height - self.height - self.y:
+            vector_y = sorted([-self.y, vector_y, self.scene.height - self.height - self.y])[1]
             self.speed_y = 0
         for obj in self.scene.groups['platforms'].sprites():
             if obj.x <= self.x + self.width - 1 and obj.x + obj.width - 1 >= self.x:
@@ -52,8 +49,8 @@ class MainCharacter(GameObject):
                     self.speed_y = 0
         self.y += vector_y
         # Ox
-        if vector_x < -self.x or vector_x > Screen.WIDTH - self.width - self.x:
-            vector_x = sorted([-self.x, vector_x, Screen.WIDTH - self.width - self.x])[1]
+        if vector_x < -self.x or vector_x > self.scene.width - self.width - self.x:
+            vector_x = sorted([-self.x, vector_x, self.scene.width - self.width - self.x])[1]
             self.speed_x = 0
         for obj in self.scene.groups['platforms'].sprites():
             if obj.y <= self.y + self.height - 1 and obj.y + obj.height - 1 >= self.y:

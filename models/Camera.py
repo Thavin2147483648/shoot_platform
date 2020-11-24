@@ -15,5 +15,5 @@ class Camera:
         rect = self.obj.get_rect()
         self.x = rect.x - (self.outer_size[0] - rect.width) // 2
         self.y = rect.y - (self.outer_size[1] - rect.height) // 2
-        self.x = sorted([0, self.x, self.obj.scene.width - self.width - 1])[1]
-        self.y = sorted([0, self.y, self.obj.scene.height - self.height - 1])[1]
+        self.x = sorted([0, self.x, self.obj.scene.width - self.width])[1]
+        self.y = sorted([0, self.y, self.obj.scene.height - self.height])[1]

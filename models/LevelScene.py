@@ -1,8 +1,9 @@
 from abc import ABC
+import pygame as pg
 
 from models.Scene import Scene
 from models.Camera import Camera
-from constants import Cell
+from constants import Cell, Color
 from functions import is_intersection
 
 
@@ -27,7 +28,8 @@ class LevelScene(Scene, ABC):
         return cell_x * Cell.WIDTH, cell_y * Cell.HEIGHT
 
     def init_objects(self):
-        self.camera = Camera(self.groups[self.camera_obj].sprite)
+        obj = self.groups[self.camera_obj].sprite
+        self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
     def get_camera(self):
         return self.camera

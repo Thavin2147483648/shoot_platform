@@ -5,6 +5,7 @@ from models.Scene import Scene
 from models.Camera import Camera
 from constants import Cell, Color
 from functions import is_intersection
+from pygame.sprite import Group
 
 
 class LevelScene(Scene, ABC):
@@ -30,6 +31,8 @@ class LevelScene(Scene, ABC):
     def init_objects(self):
         obj = self.groups[self.camera_obj].sprite
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
+        if 'can_collide' not in self.groups:
+            self.groups['can_collide'] = Group()
 
     def get_camera(self):
         return self.camera

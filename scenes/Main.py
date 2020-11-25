@@ -17,6 +17,9 @@ class Main(LevelScene):
             self.groups['platforms'].add(Platform(self, (i, self.cell_height - 1 - i // 2)))
         for i in range(m):
             self.groups['platforms'].add(Platform(self, (i, self.cell_height - 1)))
+        self.groups['platforms'].add(Platform(self, (8, self.cell_height - 2)),
+                                     Platform(self, (10, self.cell_height - 2)))
+        self.groups['can_collide'] = Group(*self.groups['platforms'].sprites())
         self.groups['level_objects'] = Group(self.groups['main_character'].sprite, *self.groups['platforms'].sprites())
         super().init_objects()
 

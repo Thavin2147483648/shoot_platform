@@ -27,8 +27,11 @@ class Color:
 class MainCharacter:
     WIDTH = 48
     HEIGHT = 96
+    LYING_WIDTH = 96
+    LYING_HEIGHT = 48
     JUMP_HEIGHT = 3 * Cell.HEIGHT + 30
     X_SPEED = 8
+    LYING_SPEED = 4
     IMAGE_PATH = 'textures/animations/main_character/none.png'
 
 
@@ -38,5 +41,5 @@ class Gravitation:
 
 class Platform:
     WIDTH = Cell.WIDTH
-    HEIGHT = Cell.HEIGHT // 2
+    HEIGHT = Cell.HEIGHT
     IMAGE_PATH = 'textures/ground.png'

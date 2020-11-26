@@ -7,19 +7,6 @@ from pygame.sprite import Group, GroupSingle
 
 
 class Main(LevelScene):
-    def init_objects(self):
-        spawn_x, spawn_y = self.get_cell_pos(0, self.cell_height - 3)
-        self.groups['main_character'] = GroupSingle(MainCharacter(self, spawn_x, spawn_y))
-        n = self.height // Cell.HEIGHT
-        m = self.width // Cell.WIDTH
-        self.groups['platforms'] = Group()
-        for i in range(0, m, 2):
-            self.groups['platforms'].add(Platform(self, (i, self.cell_height - 1 - i // 2)))
-        for i in range(m):
-            self.groups['platforms'].add(Platform(self, (i, self.cell_height - 1)))
-        self.groups['level_objects'] = Group(self.groups['main_character'].sprite, *self.groups['platforms'].sprites())
-        super().init_objects()
-
     def render(self):
         for i in range((Screen.HEIGHT + Cell.HEIGHT - 1) // Cell.HEIGHT):
             for j in range((Screen.WIDTH + Cell.WIDTH - 1) // Cell.WIDTH):

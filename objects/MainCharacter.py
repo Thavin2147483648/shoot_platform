@@ -3,14 +3,14 @@ from math import sqrt
 
 from models.Animation import Animation
 from models.LevelObject import LevelObject
-from models.LevelScene import LevelScene
-from constants import MainCharacter as Properties, Color, Screen, Gravitation
+from constants import MainCharacter as Properties, Color, Screen, Gravitation, Cell
 from functions import custom_round
 
 
 class MainCharacter(LevelObject):
-    def __init__(self, scene: LevelScene, x=50, y=0, width=Properties.WIDTH, height=Properties.HEIGHT):
-        super().__init__(scene, x, y, width, height)
+    def __init__(self, scene, spawn_cell: tuple, width=Properties.WIDTH, height=Properties.HEIGHT):
+        super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - width) // 2,
+                         Cell.HEIGHT * (spawn_cell[1] + 1) - height, width, height)
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
         self.speed_y = 0
         self.speed_x = 0

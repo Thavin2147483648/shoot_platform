@@ -2,12 +2,11 @@ import pygame as pg
 from pygame.sprite import AbstractGroup
 
 from models.GameObject import GameObject
-from models.LevelScene import LevelScene
 from functions import is_intersection
 
 
 class LevelObject(GameObject):
-    def __init__(self, scene: LevelScene, x, y, width, height, *groups: AbstractGroup):
+    def __init__(self, scene, x, y, width, height, *groups: AbstractGroup):
         self.x = x
         self.y = y
         self.width = width

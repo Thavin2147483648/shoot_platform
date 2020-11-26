@@ -8,6 +8,9 @@ class Scene(ABC):
         self.game = game
         self.index = index
         self.groups = {}
+
+    def reload(self):
+        self.groups = {}
         self.init_objects()
         if 'to_render' in self.groups or 'main' in self.groups:
             exit(-1)

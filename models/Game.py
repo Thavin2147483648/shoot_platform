@@ -15,11 +15,13 @@ class Game:
         self.screen = pg.display.set_mode((Screen.WIDTH, Screen.HEIGHT))
         pg.display.set_caption(Basic.NAME)
         self.screen.fill(Color.WHITE)
-        self.scenes = [MainScene(self, 0, 200, 100, 'main_character')]
+        self.scenes = [MainScene(self, 0, 'levels_data/1.json', 'main_character')]
         self.scenes.sort(key=lambda x: x.index)
+        self.scenes[self.scene_index].reload()
 
     def move_to_scene(self, index):
         self.scene_index = index
+        self.scenes[index].reload()
 
     def move_to_next_scene(self):
         self.move_to_scene((self.scene_index + 1) % len(self.scenes))

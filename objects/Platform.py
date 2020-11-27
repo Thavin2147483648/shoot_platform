@@ -6,8 +6,9 @@ from models.LevelObject import LevelObject
 
 
 class Platform(LevelObject):
-    def __init__(self, scene, cell_pos):
-        super().__init__(scene, cell_pos[0] * Cell.WIDTH, cell_pos[1] * Cell.HEIGHT, Properties.WIDTH, Properties.HEIGHT)
+    def __init__(self, scene, cell_pos, *groups):
+        super().__init__(scene, cell_pos[0] * Cell.WIDTH, cell_pos[1] * Cell.HEIGHT,
+                         Properties.WIDTH, Properties.HEIGHT, *groups)
         self.image = pg.image.load(Properties.IMAGE_PATH)
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
 

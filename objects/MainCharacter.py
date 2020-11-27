@@ -8,17 +8,17 @@ from functions import custom_round
 
 
 class MainCharacter(LevelObject):
-    def __init__(self, scene, spawn_cell: tuple, width=Properties.WIDTH, height=Properties.HEIGHT):
+    def __init__(self, scene, spawn_cell: tuple, *groups, width=Properties.WIDTH, height=Properties.HEIGHT):
         super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - width) // 2,
-                         Cell.HEIGHT * (spawn_cell[1] + 1) - height, width, height)
+                         Cell.HEIGHT * (spawn_cell[1] + 1) - height, width, height, *groups)
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
         self.speed_y = 0
         self.speed_x = 0
         anim_path = 'textures/animations/main_character'
         self.animation = Animation(self, {
             'none': ((Properties.IMAGE_PATH, 1),),
-            'walk_right': ((anim_path + '/walk_right_0.png', 15), (anim_path + '/walk_right_1.png', 15)),
-            'walk_left': ((anim_path + '/walk_left_0.png', 15), (anim_path + '/walk_left_1.png', 15)),
+            'walk_right': ((anim_path + '/walk_right_0.png', 30), (anim_path + '/walk_right_1.png', 30)),
+            'walk_left': ((anim_path + '/walk_left_0.png', 30), (anim_path + '/walk_left_1.png', 30)),
             'jump_right': ((anim_path + '/walk_right_1.png', 1),),
             'jump_left': ((anim_path + '/walk_left_1.png', 1),),
         }, 'none')

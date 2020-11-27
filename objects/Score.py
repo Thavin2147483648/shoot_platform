@@ -1,9 +1,11 @@
-from models.Text import Text
+from models.Text import PositionalText
+from constants import Score as Properties
 
 
-class Score(Text):
-    def __init__(self, scene, x, y, start_score=0, *groups):
-        super().__init__(scene, x, y, *groups)
+class Score(PositionalText):
+    def __init__(self, scene, *groups, position_x=Properties.POSITION_X,
+                 position_y=Properties.POSITION_Y, offset=Properties.OFFSET, color=Properties.COLOR, start_score=0):
+        super().__init__(scene, position_x, position_y, *groups, offset=offset, color=color)
         self.current = start_score
         self.max_score = self.scene.get_max_score()
         self.set_score(self.current)

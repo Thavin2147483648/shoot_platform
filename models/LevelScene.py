@@ -13,8 +13,7 @@ from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
 from objects.Score import Score
 from objects.Coin import Coin
-from models.Text import Text
-from functions import is_intersection
+from models.Text import Text, TextAlign, PositionalText, TextPositionX, TextPositionY
 
 
 class LevelScene(Scene, ABC):
@@ -53,11 +52,14 @@ class LevelScene(Scene, ABC):
                 self.groups['exits'].add(Exit(self, (i['x'], i['y'])))
         self.groups['can_collide'] = Group(*self.groups['platforms'].sprites())
         self.groups['main_character'] = GroupSingle(MainCharacter(self, self.spawn_cell))
-        self.groups['score'] = GroupSingle(Score(self, 10, 10))
+        self.groups['score'] = GroupSingle(Score(self))
         self.groups['level_objects'] = Group(*self.groups['platforms'].sprites(),
                                              *self.groups['coins'].sprites(), *self.groups['exits'].sprites(),
                                              self.groups['main_character'].sprite)
-        self.groups['to_exit_text'] = GroupSingle(Text(self, -10, 10, text="Press E\nto exit level"))
+        self.groups['to_exit_text'] = GroupSingle(PositionalText(self, TextPositionX.RIGHT,
+                                                                 TextPositionY.TOP,
+                                                                 text="Press E\nto exit level",
+                                                                 align=TextAlign.RIGHT, offset=(10, 10)))
         obj = self.groups[self.camera_obj].sprite
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 

@@ -6,7 +6,7 @@ from constants import Coin as Properties, Cell
 
 
 class Coin(LevelObject):
-    def __init__(self, scene, spawn_cell, width=Properties.WIDTH, height=Properties.HEIGHT, *groups):
+    def __init__(self, scene, spawn_cell, *groups, width=Properties.WIDTH, height=Properties.HEIGHT):
         self.spawn = (spawn_cell[0] * Cell.WIDTH + (Cell.WIDTH - width) // 2,
                       spawn_cell[1] * Cell.HEIGHT + (Cell.HEIGHT - height) // 2)
         super().__init__(scene, *self.spawn, width, height, *groups)

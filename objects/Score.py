@@ -17,6 +17,9 @@ class Score(Text):
     def add(self, d):
         self.set_score(self.current + d)
 
+    def get(self):
+        return self.current
+
     def update(self, *args, **kwargs) -> None:
         self.set_text('SCORE: ' + str(self.current))
         super().update(*args, **kwargs)

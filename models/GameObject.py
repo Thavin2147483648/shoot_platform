@@ -17,6 +17,12 @@ class GameObject(Sprite):
     def get_rect(self):
         return pg.Rect(self.x, self.y, self.width, self.height)
 
+    def show(self):
+        self.add(self.scene.groups['to_render'])
+
+    def hide(self):
+        self.remove(self.scene.groups['to_render'])
+
     @abstractmethod
     def process_logic(self, events):
         pass

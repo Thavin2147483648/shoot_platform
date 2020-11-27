@@ -17,9 +17,9 @@ class LevelObject(GameObject):
         if not is_intersection(
                 (self.rect.x, self.rect.y, self.rect.x + self.rect.width - 1, self.rect.y + self.rect.height - 1),
                 (0, 0, camera.width - 1, camera.height - 1)):
-            self.remove(self.scene.groups['to_render'])
+            self.hide()
         else:
-            self.add(self.scene.groups['to_render'])
+            self.show()
             super().update(args, kwargs)
 
     def process_logic(self, events):

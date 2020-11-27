@@ -1,11 +1,14 @@
 from abc import ABC
 import pygame as pg
 import json
+from os import path
 
 from models.Scene import Scene
 from models.Camera import Camera
 from constants import Cell, Color
 from pygame.sprite import Group, GroupSingle
+
+from objects.Exit import Exit
 from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
 from objects.Score import Score
@@ -34,7 +37,8 @@ class LevelScene(Scene, ABC):
     def init_objects(self):
         self.groups['platforms'] = Group()
         self.groups['coins'] = Group()
-        with open(self.file_path) as file:
+        self.groups['exits'] = Group()
+        with open(self.file_path, 'r') as file:
             data = json.load(file)
             self.cell_width = data['width']
             self.cell_height = data['height']
@@ -45,11 +49,15 @@ class LevelScene(Scene, ABC):
                 self.groups['platforms'].add(Platform(self, (p['x'], p['y'])))
             for c in data['coins']:
                 self.groups['coins'].add(Coin(self, (c['x'], c['y'])))
+            for i in data['exits']:
+                self.groups['exits'].add(Exit(self, (i['x'], i['y'])))
         self.groups['can_collide'] = Group(*self.groups['platforms'].sprites())
         self.groups['main_character'] = GroupSingle(MainCharacter(self, self.spawn_cell))
         self.groups['score'] = GroupSingle(Score(self, 10, 10))
-        self.groups['level_objects'] = Group(self.groups['main_character'].sprite, *self.groups['platforms'].sprites(),
-                                             *self.groups['coins'].sprites())
+        self.groups['level_objects'] = Group(*self.groups['platforms'].sprites(),
+                                             *self.groups['coins'].sprites(), *self.groups['exits'].sprites(),
+                                             self.groups['main_character'].sprite)
+        self.groups['to_exit_text'] = GroupSingle(Text(self, -10, 10, text="Press E to exit level"))
         obj = self.groups[self.camera_obj].sprite
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
@@ -58,6 +66,21 @@ class LevelScene(Scene, ABC):
 
     def game_over(self):
         self.reload()
+
+    def finish_level(self):
+        self.update_stats()
+        self.reload()
+
+    def update_stats(self):
+        data = {
+            'max_score': 0
+        }
+        if path.exists('level_stats.json'):
+            with open('level_stats.json', 'r') as file:
+                data = json.load(file)
+        data['max_score'] = max(data.get('max_score', 0), self.groups['score'].sprite.get())
+        with open('level_stats.json', 'w') as file:
+            json.dump(data, file)
 
     def render(self):
         self.camera.update()

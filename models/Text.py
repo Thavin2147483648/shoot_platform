@@ -1,7 +1,7 @@
 import pygame as pg
 
 from models.GameObject import GameObject
-from constants import Basic, Color
+from constants import Basic, Color, Screen
 
 
 class Text(GameObject):
@@ -19,7 +19,12 @@ class Text(GameObject):
         self.image = self.font.render(self.text, True, self.color)
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        self.rect = pg.Rect((self.x, self.y), self.image.get_size())
+        # WORKAROUND
+        x = self.x
+        if x < 0:
+            x += Screen.WIDTH
+            x = x - self.width + 1
+        self.rect = pg.Rect((x, self.y), self.image.get_size())
 
     def process_logic(self, events):
         pass

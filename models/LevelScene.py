@@ -8,6 +8,9 @@ from constants import Cell, Color
 from pygame.sprite import Group, GroupSingle
 from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
+from objects.Score import Score
+from objects.Coin import Coin
+from models.Text import Text
 from functions import is_intersection
 
 
@@ -15,6 +18,7 @@ class LevelScene(Scene, ABC):
     """
     camera_obj_name - имя объекта, за которым следит камера
     """
+
     def __init__(self, game, index, file_path='levels_data/1.json', camera_obj_name='main_character'):
         self.camera = None
         self.cell_width = 0
@@ -29,6 +33,7 @@ class LevelScene(Scene, ABC):
 
     def init_objects(self):
         self.groups['platforms'] = Group()
+        self.groups['coins'] = Group()
         with open(self.file_path) as file:
             data = json.load(file)
             self.cell_width = data['width']
@@ -38,14 +43,21 @@ class LevelScene(Scene, ABC):
             self.spawn_cell = (data['spawn']['x'], data['spawn']['y'])
             for p in data['platforms']:
                 self.groups['platforms'].add(Platform(self, (p['x'], p['y'])))
+            for c in data['coins']:
+                self.groups['coins'].add(Coin(self, (c['x'], c['y'])))
         self.groups['can_collide'] = Group(*self.groups['platforms'].sprites())
         self.groups['main_character'] = GroupSingle(MainCharacter(self, self.spawn_cell))
-        self.groups['level_objects'] = Group(self.groups['main_character'].sprite, *self.groups['platforms'].sprites())
+        self.groups['score'] = GroupSingle(Score(self, 10, 10))
+        self.groups['level_objects'] = Group(self.groups['main_character'].sprite, *self.groups['platforms'].sprites(),
+                                             *self.groups['coins'].sprites())
         obj = self.groups[self.camera_obj].sprite
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
     def get_camera(self):
         return self.camera
+
+    def game_over(self):
+        self.reload()
 
     def render(self):
         self.camera.update()

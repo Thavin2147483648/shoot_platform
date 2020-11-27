@@ -6,13 +6,6 @@ from functions import is_intersection
 
 
 class LevelObject(GameObject):
-    def __init__(self, scene, x, y, width, height, *groups: AbstractGroup):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        super().__init__(scene, *groups)
-
     def update_camera_rect(self):
         camera = self.scene.get_camera()
         self.rect.x = self.x - camera.x
@@ -28,9 +21,6 @@ class LevelObject(GameObject):
         else:
             self.add(self.scene.groups['to_render'])
             super().update(args, kwargs)
-
-    def get_rect(self):
-        return pg.Rect(self.x, self.y, self.width, self.height)
 
     def process_logic(self, events):
         pass

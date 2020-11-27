@@ -27,8 +27,6 @@ class MainCharacter(LevelObject):
     def is_grounded(self):
         if self.speed_y < 0:
             return False
-        if self.y + self.height >= self.scene.height:
-            return True
         for obj in self.scene.groups['platforms'].sprites():
             if self.x + self.width - 1 >= obj.x and self.x <= obj.x + obj.width - 1 and self.y + self.height == obj.y:
                 return True
@@ -36,8 +34,8 @@ class MainCharacter(LevelObject):
 
     def add_vectors(self, vector_x, vector_y):
         # Oy
-        if vector_y < -self.y or vector_y > self.scene.height - self.height - self.y:
-            vector_y = sorted([-self.y, vector_y, self.scene.height - self.height - self.y])[1]
+        if vector_y < -self.y:
+            vector_y = max(vector_y, -self.y)
             self.speed_y = 0
         for obj in self.scene.groups['platforms'].sprites():
             if obj.x <= self.x + self.width - 1 and obj.x + obj.width - 1 >= self.x:
@@ -80,6 +78,8 @@ class MainCharacter(LevelObject):
         vector_x = custom_round(self.speed_x)
         vector_y = custom_round(self.speed_y)
         self.add_vectors(vector_x, vector_y)
+        if self.y >= self.scene.height:
+            self.scene.game_over()
         if custom_round(self.speed_x) != 0:
             if self.speed_x > 0:
                 if self.is_grounded():

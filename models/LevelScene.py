@@ -57,7 +57,7 @@ class LevelScene(Scene, ABC):
         self.groups['level_objects'] = Group(*self.groups['platforms'].sprites(),
                                              *self.groups['coins'].sprites(), *self.groups['exits'].sprites(),
                                              self.groups['main_character'].sprite)
-        self.groups['to_exit_text'] = GroupSingle(Text(self, -10, 10, text="Press E to exit level"))
+        self.groups['to_exit_text'] = GroupSingle(Text(self, -10, 10, text="Press E\nto exit level"))
         obj = self.groups[self.camera_obj].sprite
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
@@ -71,14 +71,18 @@ class LevelScene(Scene, ABC):
         self.update_stats()
         self.reload()
 
-    def update_stats(self):
-        data = {
-            'max_score': 0
-        }
+    @staticmethod
+    def get_max_score():
         if path.exists('level_stats.json'):
             with open('level_stats.json', 'r') as file:
                 data = json.load(file)
-        data['max_score'] = max(data.get('max_score', 0), self.groups['score'].sprite.get())
+                return data.get('max_score', 0)
+        return 0
+
+    def update_stats(self):
+        data = {
+            'max_score': max(self.get_max_score(), self.groups['score'].sprite.get())
+        }
         with open('level_stats.json', 'w') as file:
             json.dump(data, file)
 

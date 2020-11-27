@@ -5,6 +5,7 @@ class Score(Text):
     def __init__(self, scene, x, y, start_score=0, *groups):
         super().__init__(scene, x, y, *groups)
         self.current = start_score
+        self.max_score = self.scene.get_max_score()
         self.set_score(self.current)
 
     def get_current(self):
@@ -21,5 +22,6 @@ class Score(Text):
         return self.current
 
     def update(self, *args, **kwargs) -> None:
-        self.set_text('SCORE: ' + str(self.current))
+        self.set_text('SCORE: ' + str(self.current) + '\nMAX SCORE: ' + str(self.max_score))
+
         super().update(*args, **kwargs)

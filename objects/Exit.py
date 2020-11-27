@@ -15,9 +15,13 @@ class Exit(LevelObject):
 
     def process_logic(self, events):
         if rect_collide(self.scene.groups['main_character'].sprite.get_rect(), self.get_rect()):
-            self.scene.groups['to_exit_text'].sprite.show()
             for event in events:
-                if event.type == pg.KEYDOWN:
+                if event.type == pg.KEYDOWN and event.key == pg.K_e:
                     self.scene.finish_level()
+            
+    def update(self, *args, **kwargs):
+        if rect_collide(self.scene.groups['main_character'].sprite.get_rect(), self.get_rect()):
+            self.scene.groups['to_exit_text'].sprite.show()
         else:
             self.scene.groups['to_exit_text'].sprite.hide()
+        super().update(*args, **kwargs)

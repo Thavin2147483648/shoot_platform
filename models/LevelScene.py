@@ -28,7 +28,6 @@ class LevelScene(Scene, ABC):
         self.spawn_cell = (0, 0)
         self.id = level_id
         self.file_path = f'levels_data/{level_id}.json'
-        print(self.file_path)
         self.width = self.cell_width * Cell.WIDTH
         self.height = self.cell_height * Cell.HEIGHT
         self.camera = None
@@ -86,16 +85,16 @@ class LevelScene(Scene, ABC):
         if path.exists('level_stats.json'):
             with open('level_stats.json', 'r') as file:
                 data = json.load(file)
-                level_data = data.get(self.id, {})
+                level_data = data.get(str(self.id), {})
                 return level_data.get('max_score', 0)
         return 0
 
     def update_stats(self):
         data = self.get_all_stats()
         score = self.groups['score'].sprite.get()
-        level_data = data.get(self.id, {})
+        level_data = data.get(str(self.id), {})
         level_data['max_score'] = max(level_data.get('max_score', 0), score)
-        data[self.id] = level_data
+        data[str(self.id)] = level_data
         with open('level_stats.json', 'w') as file:
             json.dump(data, file)
 

@@ -15,7 +15,7 @@ class Game:
         self.screen = pg.display.set_mode((Screen.WIDTH, Screen.HEIGHT))
         pg.display.set_caption(Basic.NAME)
         self.screen.fill(Color.WHITE)
-        self.scenes = [MainScene(self, 0, '1', 'main_character')]
+        self.scenes = [MainScene(self, 0)]
         self.scenes.sort(key=lambda x: x.index)
         self.scenes[self.scene_index].reload()
 
@@ -43,6 +43,7 @@ class Game:
         self.get_scene().render()
         pg.display.flip()
         self.frames_cnt += 1
+        # print(pg.time.get_ticks() - t)
         pg.time.delay(Basic.FRAME_DELAY - (pg.time.get_ticks() - t))
 
     def get_frames(self):

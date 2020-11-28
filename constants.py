@@ -39,7 +39,7 @@ class MainCharacter:
 
 
 class Gravitation:
-    G = 0.5
+    G = 0.25
 
 
 class Platform:

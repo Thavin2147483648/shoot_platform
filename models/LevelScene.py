@@ -21,12 +21,14 @@ class LevelScene(Scene, ABC):
     camera_obj_name - имя объекта, за которым следит камера
     """
 
-    def __init__(self, game, index, file_path='levels_data/1.json', camera_obj_name='main_character'):
+    def __init__(self, game, index, level_id=1, camera_obj_name='main_character'):
         self.camera = None
         self.cell_width = 0
         self.cell_height = 0
         self.spawn_cell = (0, 0)
-        self.file_path = file_path
+        self.id = level_id
+        self.file_path = f'levels_data/{level_id}.json'
+        print(self.file_path)
         self.width = self.cell_width * Cell.WIDTH
         self.height = self.cell_height * Cell.HEIGHT
         self.camera = None
@@ -74,17 +76,26 @@ class LevelScene(Scene, ABC):
         self.reload()
 
     @staticmethod
-    def get_max_score():
+    def get_all_stats():
+        if path.exists('level_stats.json'):
+            with open('level_stats.json', 'r') as file:
+                return json.load(file)
+        return {}
+
+    def get_max_score(self):
         if path.exists('level_stats.json'):
             with open('level_stats.json', 'r') as file:
                 data = json.load(file)
-                return data.get('max_score', 0)
+                level_data = data.get(self.id, {})
+                return level_data.get('max_score', 0)
         return 0
 
     def update_stats(self):
-        data = {
-            'max_score': max(self.get_max_score(), self.groups['score'].sprite.get())
-        }
+        data = self.get_all_stats()
+        score = self.groups['score'].sprite.get()
+        level_data = data.get(self.id, {})
+        level_data['max_score'] = max(level_data.get('max_score', 0), score)
+        data[self.id] = level_data
         with open('level_stats.json', 'w') as file:
             json.dump(data, file)
 

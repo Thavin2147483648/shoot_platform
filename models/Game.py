@@ -15,7 +15,7 @@ class Game:
         self.screen = pg.display.set_mode((Screen.WIDTH, Screen.HEIGHT))
         pg.display.set_caption(Basic.NAME)
         self.screen.fill(Color.WHITE)
-        self.scenes = [MainScene(self, 0, 'levels_data/1.json', 'main_character')]
+        self.scenes = [MainScene(self, 0, '1', 'main_character')]
         self.scenes.sort(key=lambda x: x.index)
         self.scenes[self.scene_index].reload()
 

@@ -29,7 +29,6 @@ class Camera:
         pg.draw.line(screen, Color.RED, pos2, (pos1[0], pos2[1]))
         pg.draw.line(screen, Color.RED, pos2, (pos2[0], pos1[1]))
 
-    # TODO: Write code...
     def update(self):
         rect = self.obj.get_rect()
         inner_pos = self.get_inner_pos()

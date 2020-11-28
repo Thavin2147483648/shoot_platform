@@ -3,6 +3,7 @@ import pygame as pg
 from abc import ABC, abstractmethod
 from pygame.sprite import Sprite, AbstractGroup
 from models.Scene import Scene
+from functions import rect_collide
 
 
 class GameObject(Sprite):
@@ -18,10 +19,13 @@ class GameObject(Sprite):
         return pg.Rect(self.x, self.y, self.width, self.height)
 
     def show(self):
-        self.add(self.scene.groups['to_render'])
+        self.add(self.scene.to_render)
 
     def hide(self):
-        self.remove(self.scene.groups['to_render'])
+        self.remove(self.scene.to_render)
+
+    def collide_with(self, obj):
+        return rect_collide(self.get_rect(), obj.get_rect())
 
     @abstractmethod
     def process_logic(self, events):

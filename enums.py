@@ -17,3 +17,15 @@ class TextPositionY(Enum):
     TOP = 0
     MIDDLE = 1
     BOTTOM = 2
+
+
+class LevelObjectCellPositionX(Enum):
+    LEFT = 0
+    MIDDLE = 1
+    RIGHT = 2
+
+
+class LevelObjectCellPositionY(Enum):
+    TOP = 0
+    MIDDLE = 1
+    BOTTOM = 2

@@ -13,14 +13,20 @@ from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
 from objects.Score import Score
 from objects.Coin import Coin
-from models.Text import Text, TextAlign, PositionalText, TextPositionX, TextPositionY
+from objects.Air import Air
+from models.Text import TextAlign, PositionalText, TextPositionX, TextPositionY
 
 
 class LevelScene(Scene, ABC):
+    OBJ_CLASSES = {
+        'coin': Coin,
+        'exit': Exit,
+        'platform': Platform
+    }
+
     """
     camera_obj_name - имя объекта, за которым следит камера
     """
-
     def __init__(self, game, index, level_id=1, camera_obj_name='main_character'):
         self.camera = None
         self.cell_width = 0
@@ -32,36 +38,41 @@ class LevelScene(Scene, ABC):
         self.height = self.cell_height * Cell.HEIGHT
         self.camera = None
         self.camera_obj = camera_obj_name
+        self.T = None
         super().__init__(game, index)
 
     def init_objects(self):
-        self.groups['platforms'] = Group()
-        self.groups['coins'] = Group()
-        self.groups['exits'] = Group()
+        for obj in self.OBJ_CLASSES.keys():
+            self.groups[obj] = Group()
         with open(self.file_path, 'r') as file:
             data = json.load(file)
             self.cell_width = data['width']
             self.cell_height = data['height']
+            self.T = []
+            for i in range(self.cell_width):
+                self.T.append([])
+                for j in range(self.cell_height):
+                    self.T[i].append(Air(self, i, j))
             self.width = self.cell_width * Cell.WIDTH
             self.height = self.cell_height * Cell.HEIGHT
             self.spawn_cell = (data['spawn']['x'], data['spawn']['y'])
-            for p in data['platforms']:
-                self.groups['platforms'].add(Platform(self, (p['x'], p['y'])))
-            for c in data['coins']:
-                self.groups['coins'].add(Coin(self, (c['x'], c['y'])))
-            for i in data['exits']:
-                self.groups['exits'].add(Exit(self, (i['x'], i['y'])))
-        self.groups['can_collide'] = Group(*self.groups['platforms'].sprites())
+            for obj_name in data['objects'].keys():
+                for obj_data in data['objects'][obj_name]:
+                    pos = int(obj_data['x']), int(obj_data['y'])
+                    obj = self.OBJ_CLASSES[obj_name](self, *pos)
+                    self.groups[obj_name].add(obj)
+                    self.T[pos[0]][pos[1]] = obj
+        self.groups['can_collide'] = Group(*self.get_objects('platform'))
         self.groups['main_character'] = GroupSingle(MainCharacter(self, self.spawn_cell))
         self.groups['score'] = GroupSingle(Score(self))
-        self.groups['level_objects'] = Group(*self.groups['platforms'].sprites(),
-                                             *self.groups['coins'].sprites(), *self.groups['exits'].sprites(),
-                                             self.groups['main_character'].sprite)
+        self.groups['level_objects'] = Group(self.get_object('main_character'))
+        for i in self.OBJ_CLASSES.keys():
+            self.groups['level_objects'].add(*self.get_objects(i))
         self.groups['to_exit_text'] = GroupSingle(PositionalText(self, TextPositionX.RIGHT,
                                                                  TextPositionY.TOP,
                                                                  text="Press E\nto exit level",
                                                                  align=TextAlign.RIGHT, offset=(10, 10)))
-        obj = self.groups[self.camera_obj].sprite
+        obj = self.get_object(self.camera_obj)
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
     def get_camera(self):
@@ -91,7 +102,7 @@ class LevelScene(Scene, ABC):
 
     def update_stats(self):
         data = self.get_all_stats()
-        score = self.groups['score'].sprite.get()
+        score = self.get_object('score').get()
         level_data = data.get(str(self.id), {})
         level_data['max_score'] = max(level_data.get('max_score', 0), score)
         data[str(self.id)] = level_data

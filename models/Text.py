@@ -7,8 +7,8 @@ from constants import Basic, Color, Screen
 
 class Text(GameObject):
     def __init__(self, scene, *groups, x=0, y=0, font_size=Basic.FONT_SIZE, text='Hello, world!',
-                 line_spacing=5, align=TextAlign.LEFT, color=Color.ORANGE):
-        super().__init__(scene, x, y, 0, 0, *groups)
+                 line_spacing=5, align=TextAlign.LEFT, color=Color.ORANGE, render_level=3):
+        super().__init__(scene, x, y, 0, 0, *groups, render_level=render_level)
         self.font = pg.font.Font(Basic.FONT_PATH, font_size)
         self.text = text
         self.color = color

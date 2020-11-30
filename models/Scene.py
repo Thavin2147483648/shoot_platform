@@ -2,12 +2,14 @@ from abc import ABC, abstractmethod
 
 from pygame.sprite import Group
 
+from constants import Basic
+
 
 class Scene(ABC):
     def __init__(self, game, index):
         self.game = game
         self.index = index
-        self.to_render = Group()
+        self.to_render = []
         self.groups = {}
 
     def reload(self):
@@ -19,7 +21,11 @@ class Scene(ABC):
         for group in self.groups.values():
             main_group.add(*group.sprites())
         self.groups['main'] = main_group
-        self.to_render = self.groups['main'].copy()
+        self.to_render = []
+        for i in range(Basic.RENDER_LEVELS):
+            self.to_render.append(Group())
+        for sprite in self.groups['main'].sprites():
+            self.to_render[sprite.render_level].add(sprite)
 
     # Добавить все игровые объекты в массив groups
     @abstractmethod
@@ -37,4 +43,5 @@ class Scene(ABC):
             sprite.process_logic(events)
 
     def render(self):
-        self.to_render.draw(self.game.screen)
+        for i in range(Basic.RENDER_LEVELS):
+            self.to_render[i].draw(self.game.screen)

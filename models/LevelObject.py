@@ -9,8 +9,8 @@ from constants import Cell
 
 
 class LevelObject(GameObject):
-    def __init__(self, scene: LevelScene, x, y, width, height, *groups: AbstractGroup):
-        super().__init__(scene, x, y, width, height, *groups)
+    def __init__(self, scene: LevelScene, x, y, width, height, *groups: AbstractGroup, render_level=2):
+        super().__init__(scene, x, y, width, height, *groups, render_level=render_level)
 
     def update_camera_rect(self):
         camera = self.scene.get_camera()
@@ -34,8 +34,8 @@ class LevelObject(GameObject):
 
 class StaticLevelObject(LevelObject):
     def __init__(self, scene, cell_x, cell_y, width, height, *groups, position_x=PositionX.MIDDLE,
-                 position_y=PositionY.BOTTOM):
-        super().__init__(scene, 0, 0, width, height, *groups)
+                 position_y=PositionY.BOTTOM, render_level=1):
+        super().__init__(scene, 0, 0, width, height, *groups, render_level=render_level)
         self.cell_x = cell_x
         self.cell_y = cell_y
         self.position_x = position_x

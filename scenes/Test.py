@@ -7,8 +7,8 @@ from pygame.sprite import Group, GroupSingle
 
 
 class Test(LevelScene):
-    def __init__(self, game, index, add_cell_grid=True, add_pixel_grid=False):
-        super().__init__(game, index)
+    def __init__(self, game, index, add_cell_grid=True, add_pixel_grid=False, level_id=1):
+        super().__init__(game, index, level_id=level_id)
         self.grid = pg.Surface((Screen.WIDTH, Screen.HEIGHT), pg.SRCALPHA)
         self.grid.fill((0, 0, 0, 0))
         if add_cell_grid:

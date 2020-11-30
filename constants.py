@@ -49,6 +49,12 @@ class Platform:
     IMAGE_PATH = 'textures/ground.png'
 
 
+class Wall:
+    WIDTH = 56
+    HEIGHT = 80
+    IMAGE_PATH = 'textures/wall/wall.png'
+
+
 class Coin:
     WIDTH = 32
     HEIGHT = 32

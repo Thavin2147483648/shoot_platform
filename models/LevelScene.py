@@ -15,6 +15,7 @@ from objects.PlayerSpawn import PlayerSpawn
 from objects.Score import Score
 from objects.Coin import Coin
 from objects.Air import Air
+from objects.Wall import Wall
 from models.Text import TextAlign, PositionalText, TextPositionX, TextPositionY
 
 
@@ -22,7 +23,8 @@ class LevelScene(Scene, ABC):
     OBJ_CLASSES = {
         'coin': Coin,
         'exit': Exit,
-        'platform': Platform
+        'platform': Platform,
+        'wall': Wall
     }
 
     """
@@ -44,7 +46,6 @@ class LevelScene(Scene, ABC):
     def init_objects(self):
         for obj in self.OBJ_CLASSES.keys():
             self.groups[obj] = Group()
-        self.groups['player_spawn'] = GroupSingle()
         with open(self.file_path, 'r') as file:
             data = json.load(file)
             self.cell_width = data['width']
@@ -58,7 +59,7 @@ class LevelScene(Scene, ABC):
             self.height = self.cell_height * Cell.HEIGHT
             spawn_cell = int(data['spawn']['x']), int(data['spawn']['y'])
             obj = PlayerSpawn(self, *spawn_cell)
-            self.groups['player_spawn'].add(obj)
+            self.groups['player_spawn'] = GroupSingle(obj)
             self.T[spawn_cell[0]][spawn_cell[1]] = obj
             for obj_name in data['objects'].keys():
                 for obj_data in data['objects'][obj_name]:
@@ -66,7 +67,7 @@ class LevelScene(Scene, ABC):
                     obj = self.OBJ_CLASSES[obj_name](self, *pos)
                     self.groups[obj_name].add(obj)
                     self.T[pos[0]][pos[1]] = obj
-        self.groups['can_collide'] = Group(*self.get_objects('platform'))
+        self.groups['can_collide'] = Group(*self.get_objects('platform'), *self.get_objects('wall'))
         self.groups['main_character'] = GroupSingle(MainCharacter(self,
                                                                   (self.get_object('player_spawn').cell_x,
                                                                    self.get_object('player_spawn').cell_y)))

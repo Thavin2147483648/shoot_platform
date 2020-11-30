@@ -65,6 +65,12 @@ class Exit:
     IMAGE_PATH = 'textures/exit.png'
 
 
+class PlayerSpawn:
+    WIDTH = 80
+    HEIGHT = 160
+    IMAGE_PATH = 'textures/player_spawn.png'
+
+
 class Score:
     POSITION_X = TextPositionX.LEFT
     POSITION_Y = TextPositionY.TOP

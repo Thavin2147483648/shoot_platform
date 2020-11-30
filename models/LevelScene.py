@@ -11,6 +11,7 @@ from pygame.sprite import Group, GroupSingle
 from objects.Exit import Exit
 from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
+from objects.PlayerSpawn import PlayerSpawn
 from objects.Score import Score
 from objects.Coin import Coin
 from objects.Air import Air
@@ -31,7 +32,6 @@ class LevelScene(Scene, ABC):
         self.camera = None
         self.cell_width = 0
         self.cell_height = 0
-        self.spawn_cell = (0, 0)
         self.id = level_id
         self.file_path = f'levels_data/{level_id}.json'
         self.width = self.cell_width * Cell.WIDTH
@@ -44,6 +44,7 @@ class LevelScene(Scene, ABC):
     def init_objects(self):
         for obj in self.OBJ_CLASSES.keys():
             self.groups[obj] = Group()
+        self.groups['player_spawn'] = GroupSingle()
         with open(self.file_path, 'r') as file:
             data = json.load(file)
             self.cell_width = data['width']
@@ -55,7 +56,10 @@ class LevelScene(Scene, ABC):
                     self.T[i].append(Air(self, i, j))
             self.width = self.cell_width * Cell.WIDTH
             self.height = self.cell_height * Cell.HEIGHT
-            self.spawn_cell = (data['spawn']['x'], data['spawn']['y'])
+            spawn_cell = int(data['spawn']['x']), int(data['spawn']['y'])
+            obj = PlayerSpawn(self, *spawn_cell)
+            self.groups['player_spawn'].add(obj)
+            self.T[spawn_cell[0]][spawn_cell[1]] = obj
             for obj_name in data['objects'].keys():
                 for obj_data in data['objects'][obj_name]:
                     pos = int(obj_data['x']), int(obj_data['y'])
@@ -63,9 +67,11 @@ class LevelScene(Scene, ABC):
                     self.groups[obj_name].add(obj)
                     self.T[pos[0]][pos[1]] = obj
         self.groups['can_collide'] = Group(*self.get_objects('platform'))
-        self.groups['main_character'] = GroupSingle(MainCharacter(self, self.spawn_cell))
+        self.groups['main_character'] = GroupSingle(MainCharacter(self,
+                                                                  (self.get_object('player_spawn').cell_x,
+                                                                   self.get_object('player_spawn').cell_y)))
         self.groups['score'] = GroupSingle(Score(self))
-        self.groups['level_objects'] = Group(self.get_object('main_character'))
+        self.groups['level_objects'] = Group(self.get_object('main_character'), self.get_object('player_spawn'))
         for i in self.OBJ_CLASSES.keys():
             self.groups['level_objects'].add(*self.get_objects(i))
         self.groups['to_exit_text'] = GroupSingle(PositionalText(self, TextPositionX.RIGHT,

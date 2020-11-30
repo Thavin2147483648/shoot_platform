@@ -1,6 +1,6 @@
 import pygame as pg
 from constants import Screen, Basic, Color
-from scenes.Main import Main as MainScene
+from scenes.Test import Test as MainScene
 
 
 class Game:

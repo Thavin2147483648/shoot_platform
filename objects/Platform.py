@@ -8,7 +8,7 @@ from enums import LevelObjectCellPositionX as PositionX, LevelObjectCellPosition
 
 class Platform(StaticLevelObject):
     def __init__(self, scene, cell_x, cell_y, *groups, width=Properties.WIDTH, height=Properties.HEIGHT,
-                 render_level=2):
+                 render_level=1):
         super().__init__(scene, cell_x, cell_y, width, height, *groups,
                          position_x=PositionX.MIDDLE, position_y=PositionY.TOP, render_level=render_level)
         self.image = pg.image.load(Properties.IMAGE_PATH)

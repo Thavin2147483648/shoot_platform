@@ -6,7 +6,7 @@ from objects.Platform import Platform
 from pygame.sprite import Group, GroupSingle
 
 
-class Main(LevelScene):
+class Test(LevelScene):
     def __init__(self, game, index, add_cell_grid=True, add_pixel_grid=False):
         super().__init__(game, index)
         self.grid = pg.Surface((Screen.WIDTH, Screen.HEIGHT), pg.SRCALPHA)

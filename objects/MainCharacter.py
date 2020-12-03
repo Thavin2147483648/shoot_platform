@@ -1,10 +1,12 @@
 import pygame as pg
 from math import sqrt
 
+from enums import DirectionX
 from models.Animation import Animation
 from models.LevelObject import LevelObject
 from constants import MainCharacter as Properties, Color, Screen, Gravitation, Cell
 from functions import custom_round
+from models.Weapon import Pistol
 
 
 class MainCharacter(LevelObject):
@@ -14,14 +16,10 @@ class MainCharacter(LevelObject):
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
         self.speed_y = 0
         self.speed_x = 0
-        anim_path = 'textures/animations/main_character'
-        self.animation = Animation(self, {
-            'none': ((Properties.IMAGE_PATH, 1),),
-            'walk_right': ((anim_path + '/walk_right_0.png', 30), (anim_path + '/walk_right_1.png', 30)),
-            'walk_left': ((anim_path + '/walk_left_0.png', 30), (anim_path + '/walk_left_1.png', 30)),
-            'jump_right': ((anim_path + '/walk_right_1.png', 1),),
-            'jump_left': ((anim_path + '/walk_left_1.png', 1),),
-        }, 'none')
+        self.last_x_direction = DirectionX.LEFT
+        self.animation = Animation(self, Properties.ANIMATION, 'none')
+        self.weapon = None
+        # self.set_weapon(Pistol(self.scene, self, 24))
         self.image = self.animation.get_current_image()
 
     def is_grounded(self):
@@ -31,6 +29,15 @@ class MainCharacter(LevelObject):
             if self.x + self.width - 1 >= obj.x and self.x <= obj.x + obj.width - 1 and self.y + self.height == obj.y:
                 return True
         return False
+
+    def get_weapon_extra_width(self):
+        if self.weapon is None:
+            return 0
+        return self.weapon.extra_width
+
+    def set_weapon(self, weapon):
+        self.weapon = weapon
+        self.animation.override_animations(weapon.get_animation())
 
     def add_vectors(self, vector_x, vector_y):
         # Oy
@@ -60,8 +67,14 @@ class MainCharacter(LevelObject):
                     self.speed_x = 0
         self.x += vector_x
 
+    def update_camera_rect(self):
+        super(MainCharacter, self).update_camera_rect()
+        if self.last_x_direction == DirectionX.LEFT:
+            self.rect.x -= self.get_weapon_extra_width()
+
     def update_sprite(self):
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+        print(self.last_x_direction)
         self.image = self.animation.update()
 
     def process_logic(self, events):
@@ -80,6 +93,8 @@ class MainCharacter(LevelObject):
         self.add_vectors(vector_x, vector_y)
         if self.y >= self.scene.height:
             self.scene.game_over()
+        self.last_x_direction = DirectionX.RIGHT if self.speed_x > 0 else \
+            (DirectionX.NONE if self.speed_x == 0 else DirectionX.LEFT)
         if custom_round(self.speed_x) != 0:
             if self.speed_x > 0:
                 if self.is_grounded():

@@ -29,3 +29,9 @@ class LevelObjectCellPositionY(Enum):
     TOP = 0
     MIDDLE = 1
     BOTTOM = 2
+
+
+class DirectionX(Enum):
+    LEFT = 0
+    NONE = 1
+    RIGHT = 2

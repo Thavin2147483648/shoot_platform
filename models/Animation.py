@@ -12,11 +12,7 @@ class Animation:
     """
     def __init__(self, obj: GameObject, dct, current):
         self.dct = {}
-        for name in dct:
-            arr = []
-            for i in dct[name]:
-                arr.append((pg.image.load(i[0]), i[1]))
-            self.dct[name] = tuple(arr)
+        self.override_animations(dct)
         self.obj = obj
         self.current_name = ''
         self.start = 0
@@ -27,6 +23,16 @@ class Animation:
 
     def get_frames(self):
         return self.obj.scene.game.get_frames()
+
+    def override_animations(self, dct):
+        for name in dct:
+            self.override_animation(name, dct[name])
+
+    def override_animation(self, name, value):
+        arr = []
+        for i in value:
+            arr.append((pg.image.load(i[0]), i[1]))
+        self.dct[name] = tuple(arr)
 
     def set_animation(self, animation):
         if self.get_animation() == animation:

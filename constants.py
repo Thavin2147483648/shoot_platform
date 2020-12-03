@@ -37,6 +37,14 @@ class MainCharacter:
     JUMP_HEIGHT = 3 * Cell.HEIGHT + 30
     X_SPEED = 4
     IMAGE_PATH = 'textures/animations/main_character/none.png'
+    ANIMATION_PATH = 'textures/animations/main_character'
+    ANIMATION = {
+            'none': ((IMAGE_PATH, 1),),
+            'walk_right': ((ANIMATION_PATH + '/walk_right_0.png', 30), (ANIMATION_PATH + '/walk_right_1.png', 30)),
+            'walk_left': ((ANIMATION_PATH + '/walk_left_0.png', 30), (ANIMATION_PATH + '/walk_left_1.png', 30)),
+            'jump_right': ((ANIMATION_PATH + '/walk_right_1.png', 1),),
+            'jump_left': ((ANIMATION_PATH + '/walk_left_1.png', 1),),
+        }
 
 
 class Gravitation:

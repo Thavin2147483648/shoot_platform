@@ -115,8 +115,7 @@ class MainCharacter(LevelObject):
         else:
             self.animation.set_animation('none_' + d)
         self.speed_x = 0
-        for event in events:
-            if event.type == pg.MOUSEBUTTONDOWN:
-                if self.weapon is not None:
-                    self.weapon.fire()
+        if pg.mouse.get_pressed(3)[0]:
+            if self.weapon is not None:
+                self.weapon.fire()
         self.update_sprite()

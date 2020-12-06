@@ -91,3 +91,11 @@ class Score:
     POSITION_Y = TextPositionY.TOP
     OFFSET = (10, 10)
     COLOR = Color.ORANGE
+
+
+class Bullet:
+    WIDTH = 8
+    HEIGHT = 4
+    LEFT_IMAGE_PATH = 'textures/bullet/bullet_left.png'
+    RIGHT_IMAGE_PATH = 'textures/bullet/bullet_right.png'
+    SPEED = 16

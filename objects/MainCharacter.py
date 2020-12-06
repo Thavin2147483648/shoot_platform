@@ -68,6 +68,9 @@ class MainCharacter(LevelObject):
                     self.speed_x = 0
         self.x += vector_x
 
+    def get_last_x_direction(self):
+        return self.last_x_direction
+
     def update_camera_rect(self):
         super(MainCharacter, self).update_camera_rect()
         if self.last_x_direction == DirectionX.LEFT:
@@ -96,7 +99,6 @@ class MainCharacter(LevelObject):
         if self.get_y() >= self.scene.height:
             self.scene.game_over()
         if self.speed_x != 0:
-            print('CHECK 2')
             self.last_x_direction = (DirectionX.RIGHT if self.speed_x > 0 else DirectionX.LEFT)
         d = ('left' if self.last_x_direction == DirectionX.LEFT else 'right')
         if self.speed_x != 0:
@@ -113,4 +115,8 @@ class MainCharacter(LevelObject):
         else:
             self.animation.set_animation('none_' + d)
         self.speed_x = 0
+        for event in events:
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if self.weapon is not None:
+                    self.weapon.fire()
         self.update_sprite()

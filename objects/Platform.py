@@ -12,7 +12,7 @@ class Platform(StaticLevelObject):
         super().__init__(scene, cell_x, cell_y, width, height, *groups,
                          position_x=PositionX.MIDDLE, position_y=PositionY.TOP, render_level=render_level)
         self.image = pg.image.load(Properties.IMAGE_PATH)
-        self.rect = self.get_rect()
+        self.rect = self.get_render_rect()
 
     def process_logic(self, events):
         pass

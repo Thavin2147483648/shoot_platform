@@ -12,14 +12,7 @@ class Coin(StaticLevelObject):
         super().__init__(scene, cell_x, cell_y, width, height, *groups,
                          position_x=PositionX.MIDDLE, position_y=PositionY.MIDDLE, render_level=render_level)
         self.image = pg.image.load(Properties.IMAGE_PATH)
-        self.rect = self.get_rect()
-
-    # def __init__(self, scene, spawn_cell, *groups, width=Properties.WIDTH, height=Properties.HEIGHT):
-    #     self.spawn = (spawn_cell[0] * Cell.WIDTH + (Cell.WIDTH - width) // 2,
-    #                   spawn_cell[1] * Cell.HEIGHT + (Cell.HEIGHT - height) // 2)
-    #     super().__init__(scene, *self.spawn, width, height, *groups)
-    #     self.image = pg.image.load(Properties.IMAGE_PATH)
-    #     self.rect = self.get_rect()
+        self.rect = self.get_render_rect()
 
     def process_logic(self, events):
         if self.collide_with(self.scene.get_object('main_character')):
@@ -27,7 +20,6 @@ class Coin(StaticLevelObject):
             self.kill()
         frames = self.scene.game.get_frames() % (4 * len(Properties.HESITATION_S))
         s_ind = frames % (2 * len(Properties.HESITATION_S))
-        s = None
         if s_ind >= len(Properties.HESITATION_S):
             s = Properties.HESITATION_S[2 * len(Properties.HESITATION_S) - s_ind - 1]
         else:

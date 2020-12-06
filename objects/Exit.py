@@ -11,7 +11,7 @@ class Exit(StaticLevelObject):
         super().__init__(scene, cell_x, cell_y, width, height, *groups,
                          position_x=PositionX.LEFT, position_y=PositionY.BOTTOM)
         self.image = pg.image.load(Properties.IMAGE_PATH)
-        self.rect = self.get_rect()
+        self.rect = self.get_render_rect()
 
     def process_logic(self, events):
         if self.collide_with(self.scene.get_object('main_character')):

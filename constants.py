@@ -7,6 +7,7 @@ class Basic:
     FONT_PATH = 'fonts/pixel_font.ttf'
     FONT_SIZE = 40
     RENDER_LEVELS = 4
+    EPS = 0.00001
 
 
 class Screen:

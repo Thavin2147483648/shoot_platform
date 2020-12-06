@@ -3,6 +3,7 @@ from math import sqrt
 
 from enums import DirectionX
 from models.Animation import Animation
+from models.Float import Float
 from models.LevelObject import LevelObject
 from constants import MainCharacter as Properties, Color, Screen, Gravitation, Cell
 from functions import custom_round
@@ -14,19 +15,19 @@ class MainCharacter(LevelObject):
         super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - width) // 2,
                          Cell.HEIGHT * (spawn_cell[1] + 1) - height, width, height, *groups)
         self.rect = pg.Rect(self.x, self.y, self.width, self.height)
-        self.speed_y = 0
-        self.speed_x = 0
+        self.speed_y = Float(0)
+        self.speed_x = Float(0)
         self.last_x_direction = DirectionX.LEFT
         self.animation = Animation(self, Properties.ANIMATION, 'none')
         self.weapon = None
-        # self.set_weapon(Pistol(self.scene, self, 24))
+        self.set_weapon(Pistol(self.scene, self, 24))
         self.image = self.animation.get_current_image()
 
     def is_grounded(self):
-        if self.speed_y < 0:
+        if Float(self.speed_y) != 0:
             return False
         for obj in self.scene.get_objects('can_collide'):
-            if self.x + self.width - 1 >= obj.x and self.x <= obj.x + obj.width - 1 and self.y + self.height == obj.y:
+            if self.get_x2() > obj.get_x1() and self.get_x1() < obj.get_x2() and self.get_y2() == obj.get_y1():
                 return True
         return False
 
@@ -41,29 +42,29 @@ class MainCharacter(LevelObject):
 
     def add_vectors(self, vector_x, vector_y):
         # Oy
-        if vector_y < -self.y:
-            vector_y = max(vector_y, -self.y)
+        if Float(self.get_y() + vector_y) < 0:
+            vector_y = max(vector_y, -self.get_y())
             self.speed_y = 0
         for obj in self.scene.get_objects('can_collide'):
-            if obj.x <= self.x + self.width - 1 and obj.x + obj.width - 1 >= self.x:
-                if self.y + self.height - 1 < obj.y <= self.y + self.height - 1 + vector_y:
-                    vector_y = obj.y - (self.y + self.height)
+            if self.get_x2() > obj.get_x1() and self.get_x1() < obj.get_x2():
+                if self.get_y2() <= obj.get_y1() < Float(self.get_y2() + vector_y):
+                    vector_y = obj.get_y1() - self.get_y2()
                     self.speed_y = 0
-                if self.y > obj.y + obj.height - 1 >= self.y + vector_y:
-                    vector_y = obj.y + obj.height - self.y
+                if self.get_y1() >= obj.get_y2() > Float(self.get_y1() + vector_y):
+                    vector_y = obj.get_y2() - self.get_y1()
                     self.speed_y = 0
         self.y += vector_y
         # Ox
-        if vector_x < -self.x or vector_x > self.scene.width - self.width - self.x:
-            vector_x = sorted([-self.x, vector_x, self.scene.width - self.width - self.x])[1]
+        if Float(self.get_x1() + vector_x) < 0 or Float(self.get_x2() + vector_x) > Float(self.scene.get_width()):
+            vector_x = sorted([-self.get_x1(), vector_x, Float(self.scene.get_width() - self.get_x2())])[1]
             self.speed_x = 0
         for obj in self.scene.get_objects('can_collide'):
-            if obj.y <= self.y + self.height - 1 and obj.y + obj.height - 1 >= self.y:
-                if self.x + self.width - 1 < obj.x <= self.x + self.width - 1 + vector_x:
-                    vector_x = obj.x - (self.x + self.width)
+            if self.get_y2() > obj.get_y1() and self.get_y1() < obj.get_y2():
+                if self.get_x2() <= obj.get_x1() < Float(self.get_x2() + vector_x):
+                    vector_x = obj.get_x1() - self.get_x2()
                     self.speed_x = 0
-                if self.x > obj.x + obj.width - 1 >= self.x + vector_x:
-                    vector_x = obj.x + obj.width - self.x
+                if self.get_x1() >= obj.get_x2() > Float(self.get_x1() + vector_x):
+                    vector_x = obj.get_x2() - self.get_x1()
                     self.speed_x = 0
         self.x += vector_x
 
@@ -73,8 +74,7 @@ class MainCharacter(LevelObject):
             self.rect.x -= self.get_weapon_extra_width()
 
     def update_sprite(self):
-        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
-        print(self.last_x_direction)
+        self.rect = self.get_render_rect()
         self.image = self.animation.update()
 
     def process_logic(self, events):
@@ -88,14 +88,18 @@ class MainCharacter(LevelObject):
                 self.speed_y = -sqrt(2 * Gravitation.G * Properties.JUMP_HEIGHT)
         if not self.is_grounded():
             self.speed_y += Gravitation.G
-        vector_x = custom_round(self.speed_x)
-        vector_y = custom_round(self.speed_y)
+        vector_x = Float(self.speed_x)
+        vector_y = Float(self.speed_y)
         self.add_vectors(vector_x, vector_y)
-        if self.y >= self.scene.height:
+        self.speed_x = Float(self.speed_x)
+        self.speed_y = Float(self.speed_y)
+        if self.get_y() >= self.scene.height:
             self.scene.game_over()
-        self.last_x_direction = DirectionX.RIGHT if self.speed_x > 0 else \
-            (DirectionX.NONE if self.speed_x == 0 else DirectionX.LEFT)
-        if custom_round(self.speed_x) != 0:
+        if self.speed_x != 0:
+            print('CHECK 2')
+            self.last_x_direction = (DirectionX.RIGHT if self.speed_x > 0 else DirectionX.LEFT)
+        d = ('left' if self.last_x_direction == DirectionX.LEFT else 'right')
+        if self.speed_x != 0:
             if self.speed_x > 0:
                 if self.is_grounded():
                     self.animation.set_animation('walk_right')
@@ -107,6 +111,6 @@ class MainCharacter(LevelObject):
                 else:
                     self.animation.set_animation('jump_left')
         else:
-            self.animation.set_animation('none')
+            self.animation.set_animation('none_' + d)
         self.speed_x = 0
         self.update_sprite()

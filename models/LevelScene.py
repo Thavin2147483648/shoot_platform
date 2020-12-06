@@ -43,6 +43,12 @@ class LevelScene(Scene, ABC):
         self.T = None
         super().__init__(game, index)
 
+    def get_width(self):
+        return self.width
+
+    def get_height(self):
+        return self.height
+
     def init_objects(self):
         for obj in self.OBJ_CLASSES.keys():
             self.groups[obj] = Group()
@@ -118,5 +124,4 @@ class LevelScene(Scene, ABC):
 
     def render(self):
         self.camera.update()
-        self.groups['level_objects'].update()
         super().render()

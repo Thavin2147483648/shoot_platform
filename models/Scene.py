@@ -43,5 +43,6 @@ class Scene(ABC):
             sprite.process_logic(events)
 
     def render(self):
+        self.groups['main'].update()
         for i in range(Basic.RENDER_LEVELS):
             self.to_render[i].draw(self.game.screen)

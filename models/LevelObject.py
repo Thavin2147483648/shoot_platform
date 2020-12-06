@@ -3,7 +3,7 @@ from pygame.sprite import AbstractGroup
 
 from models import LevelScene
 from models.GameObject import GameObject
-from functions import is_intersection
+from functions import is_intersection, rect_collide
 from enums import LevelObjectCellPositionX as PositionX, LevelObjectCellPositionY as PositionY
 from constants import Cell
 
@@ -14,19 +14,17 @@ class LevelObject(GameObject):
 
     def update_camera_rect(self):
         camera = self.scene.get_camera()
-        self.rect.x = self.x - camera.x
-        self.rect.y = self.y - camera.y
+        self.rect.x -= camera.x
+        self.rect.y -= camera.y
 
     def update(self, *args, **kwargs) -> None:
+        super().update(*args, **kwargs)
         camera = self.scene.get_camera()
         self.update_camera_rect()
-        if not is_intersection(
-                (self.rect.x, self.rect.y, self.rect.x + self.rect.width - 1, self.rect.y + self.rect.height - 1),
-                (0, 0, camera.width - 1, camera.height - 1)):
+        if not rect_collide(self.rect, pg.Rect(0, 0, camera.width, camera.height)):
             self.hide()
         else:
             self.show()
-        super().update(args, kwargs)
 
     def process_logic(self, events):
         pass

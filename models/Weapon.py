@@ -9,11 +9,13 @@ from objects.Bullet import Bullet
 class Weapon(ABC):
     OFFSET_Y = 0
     RELOAD_TIME = 0
+    CAPACITY = 0
 
     def __init__(self, scene, player, extra_width):
         self.extra_width = extra_width
         self.scene = scene
         self.player = player
+        self.remaining = self.CAPACITY
         self.remaining_time = 0
         self.last_frames = 0
 
@@ -35,7 +37,8 @@ class Weapon(ABC):
 
 class Pistol(Weapon):
     OFFSET_Y = 42
-    RELOAD_TIME = 80
+    RELOAD_TIME = 60
+    CAPACITY = 8
 
     def get_animation(self):
         path = MainCharacter.ANIMATION_PATH + '/weapon/pistol'
@@ -61,8 +64,16 @@ class Pistol(Weapon):
         self.scene.groups['main'].add(bullet)
         self.scene.groups['level_objects'].add(bullet)
         self.scene.groups['can_collide'].add(bullet)
+        self.set_remaining(self.remaining - 1)
         self.remaining_time = self.RELOAD_TIME
         self.last_frames = self.scene.game.get_frames()
+
+    def get_remaining(self):
+        return self.remaining
+
+    def set_remaining(self, value):
+        self.remaining = sorted([0, value, self.CAPACITY])[1]
+        self.scene.get_object('ammo_indicator').set_current(self.remaining)
 
     def update_remaining_time(self):
         t = self.scene.game.get_frames() - self.last_frames
@@ -70,6 +81,8 @@ class Pistol(Weapon):
         self.remaining_time = max(0, self.remaining_time - t)
 
     def can_fire(self):
+        if self.remaining == 0:
+            return False
         self.update_remaining_time()
         if self.remaining_time > 0:
             return False

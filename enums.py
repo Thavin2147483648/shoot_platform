@@ -7,13 +7,13 @@ class TextAlign(Enum):
     RIGHT = 2
 
 
-class TextPositionX(Enum):
+class PositionX(Enum):
     LEFT = 0
     MIDDLE = 1
     RIGHT = 2
 
 
-class TextPositionY(Enum):
+class PositionY(Enum):
     TOP = 0
     MIDDLE = 1
     BOTTOM = 2

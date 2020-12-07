@@ -1,4 +1,4 @@
-from enums import TextPositionX, TextPositionY
+from enums import PositionX, PositionY
 
 
 class Basic:
@@ -40,7 +40,9 @@ class MainCharacter:
     IMAGE_PATH = 'textures/animations/main_character/none.png'
     ANIMATION_PATH = 'textures/animations/main_character'
     ANIMATION = {
+            'none_left': ((IMAGE_PATH, 1),),
             'none': ((IMAGE_PATH, 1),),
+            'none_right': ((IMAGE_PATH, 1),),
             'walk_right': ((ANIMATION_PATH + '/walk_right_0.png', 30), (ANIMATION_PATH + '/walk_right_1.png', 30)),
             'walk_left': ((ANIMATION_PATH + '/walk_left_0.png', 30), (ANIMATION_PATH + '/walk_left_1.png', 30)),
             'jump_right': ((ANIMATION_PATH + '/walk_right_1.png', 1),),
@@ -87,8 +89,8 @@ class PlayerSpawn:
 
 
 class Score:
-    POSITION_X = TextPositionX.LEFT
-    POSITION_Y = TextPositionY.TOP
+    POSITION_X = PositionX.LEFT
+    POSITION_Y = PositionY.TOP
     OFFSET = (10, 10)
     COLOR = Color.ORANGE
 
@@ -99,3 +101,11 @@ class Bullet:
     LEFT_IMAGE_PATH = 'textures/bullet/bullet_left.png'
     RIGHT_IMAGE_PATH = 'textures/bullet/bullet_right.png'
     SPEED = 16
+
+
+class AmmoIndicator:
+    WIDTH = 24
+    HEIGHT = 48
+    FULL_IMAGE_PATH = 'textures/bullet/indicator/full.png'
+    EMPTY_IMAGE_PATH = 'textures/bullet/indicator/empty.png'
+    OFFSET_X = 5

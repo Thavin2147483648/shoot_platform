@@ -1,7 +1,7 @@
 import pygame as pg
-from enums import TextAlign, TextPositionX, TextPositionY
+from enums import TextAlign, PositionX, PositionY
 
-from models.GameObject import GameObject
+from models.GameObject import GameObject, PositionalGameObject
 from constants import Basic, Color, Screen
 
 
@@ -12,8 +12,6 @@ class Text(GameObject):
         self.font = pg.font.Font(Basic.FONT_PATH, font_size)
         self.text = text
         self.color = color
-        self.image = None
-        self.rect = None
         self.line_spacing = line_spacing
         self.align = align
         self.set_text(text)
@@ -50,29 +48,17 @@ class Text(GameObject):
         pass
 
 
-class PositionalText(Text):
-    def __init__(self, scene, position_x: TextPositionX, position_y: TextPositionY, *groups,
+class PositionalText(Text, PositionalGameObject):
+    def __init__(self, scene, position_x: PositionX, position_y: PositionY, *groups,
                  font_size=Basic.FONT_SIZE, line_spacing=5, align=TextAlign.LEFT, color=Color.ORANGE,
                  text='Hello, world!', offset=(10, 10)):
+        super().__init__(scene, *groups, font_size=font_size, line_spacing=line_spacing,
+                         align=align, color=color, text=text)
         self.position_x = position_x
         self.position_y = position_y
         self.offset = offset
-        super().__init__(scene, *groups, font_size=font_size, line_spacing=line_spacing,
-                         align=align, color=color, text=text)
+        self.update_position()
 
     def set_text(self, text):
         super().set_text(text)
-        if self.position_x == TextPositionX.LEFT:
-            self.x = self.offset[0]
-        elif self.position_x == TextPositionX.MIDDLE:
-            self.x = (Screen.WIDTH - self.width) // 2
-        elif self.position_x == TextPositionX.RIGHT:
-            self.x = Screen.WIDTH - self.width - self.offset[0]
-        # Oy
-        if self.position_y == TextPositionY.TOP:
-            self.y = self.offset[1]
-        elif self.position_y == TextPositionY.MIDDLE:
-            self.y = (Screen.HEIGHT - self.height) // 2
-        elif self.position_y == TextPositionY.BOTTOM:
-            self.y = Screen.HEIGHT - self.height - self.offset[1]
-        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+        self.update_position()

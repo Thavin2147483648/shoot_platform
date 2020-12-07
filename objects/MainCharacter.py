@@ -38,6 +38,7 @@ class MainCharacter(LevelObject):
 
     def set_weapon(self, weapon):
         self.weapon = weapon
+        self.scene.get_object('ammo_indicator').attach_weapon(self.weapon)
         self.animation.override_animations(weapon.get_animation())
 
     def add_vectors(self, vector_x, vector_y):
@@ -82,6 +83,9 @@ class MainCharacter(LevelObject):
 
     def process_logic(self, events):
         pressed = pg.key.get_pressed()
+        if pressed[pg.K_r]:
+            if self.weapon is not None:
+                self.weapon.set_remaining(self.weapon.CAPACITY)
         if pressed[pg.K_a]:
             self.speed_x = -Properties.X_SPEED
         if pressed[pg.K_d]:

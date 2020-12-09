@@ -7,11 +7,9 @@ from enums import LevelObjectCellPositionX as PositionX, LevelObjectCellPosition
 
 
 class Exit(StaticLevelObject):
-    def __init__(self, scene, cell_x, cell_y, *groups, width=Properties.WIDTH, height=Properties.HEIGHT):
-        super().__init__(scene, cell_x, cell_y, width, height, *groups,
-                         position_x=PositionX.LEFT, position_y=PositionY.BOTTOM)
-        self.image = pg.image.load(Properties.IMAGE_PATH)
-        self.rect = self.get_render_rect()
+    WIDTH = Properties.WIDTH
+    HEIGHT = Properties.HEIGHT
+    ANIMATION = Properties.IMAGE_PATH
 
     def process_logic(self, events):
         if self.collide_with(self.scene.get_object('main_character')):

@@ -8,15 +8,8 @@ from enums import LevelObjectCellPositionX as PositionX, LevelObjectCellPosition
 
 
 class BonusItem(StaticLevelObject):
-    WIDTH = 0
-    HEIGHT = 0
-    ANIMATION = ''
-
-    def __init__(self, scene, cell_x, cell_y, *groups, position_x=PositionX.MIDDLE, position_y=PositionY.MIDDLE):
-        super().__init__(scene, cell_x, cell_y, self.WIDTH, self.HEIGHT, *groups,
-                         position_x=position_x, position_y=position_y, render_level=1)
-        self.animation = Animation(self, self.ANIMATION)
-        self.image = pg.Surface((10, 10))
+    CELL_POSITION_X = PositionX.MIDDLE
+    CELL_POSITION_Y = PositionY.MIDDLE
 
     @abstractmethod
     def on_pickup(self):
@@ -38,4 +31,3 @@ class BonusItem(StaticLevelObject):
         if frames >= 2 * len(Properties.HESITATION_S):
             s *= -1
         self.y = self.get_coords()[1] + s
-        self.image = self.animation.update()

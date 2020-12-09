@@ -2,26 +2,43 @@ import pygame as pg
 
 from abc import ABC, abstractmethod
 from pygame.sprite import Sprite, AbstractGroup
+
+from models.Animation import Animation
 from models.Scene import Scene
-from functions import is_intersection
+from functions import is_intersection, get_surface
 from models.Float import Float
 from enums import PositionX, PositionY
 from constants import Screen
 
 
 class GameObject(Sprite):
-    def __init__(self, scene: Scene, x: float, y: float, width: int, height: int,
+    WIDTH = 0
+    HEIGHT = 0
+    ANIMATION = get_surface(10, 10)
+
+    def __init__(self, scene: Scene, x: float, y: float,
                  *groups: AbstractGroup, render_level=0):
         self.scene = scene
         self.x = x
         self.y = y
-        self.width = int(width)
-        self.height = int(height)
+        self.width = int(self.WIDTH)
+        self.height = int(self.HEIGHT)
         self.render_level = render_level
+        if type(self.ANIMATION) is not Animation:
+            self.animation = Animation(self, self.ANIMATION)
+        else:
+            self.animation = self.ANIMATION
         super().__init__(*groups)
 
     def get_render_rect(self):
         return pg.Rect(int(Float(self.x)), int(Float(self.y)), self.width, self.height)
+
+    def get_render_image(self):
+        print(self.animation.get_current_image())
+        return self.animation.get_current_image()
+
+    def set_image(self, image):
+        self.animation.override_animation('none', image)
 
     def get_width(self):
         return self.width
@@ -61,17 +78,18 @@ class GameObject(Sprite):
 
     def update(self, *args, **kwargs) -> None:
         self.rect = self.get_render_rect()
+        self.animation.update()
+        self.image = self.get_render_image()
         super().update(*args, **kwargs)
 
-    @abstractmethod
     def process_logic(self, events):
         pass
 
 
 class PositionalGameObject(GameObject):
-    def __init__(self, scene, position_x: PositionX, position_y: PositionY, width: int, height: int, *groups,
+    def __init__(self, scene, position_x: PositionX, position_y: PositionY, *groups,
                  offset=(10, 10), render_level=3):
-        super().__init__(scene, 0, 0, width, height, *groups, render_level=render_level)
+        super().__init__(scene, 0, 0, *groups, render_level=render_level)
         self.position_x = position_x
         self.position_y = position_y
         self.offset = offset
@@ -95,6 +113,5 @@ class PositionalGameObject(GameObject):
         self.y = Float(self.y)
         self.rect = self.get_render_rect()
 
-    @abstractmethod
     def process_logic(self, events):
         pass

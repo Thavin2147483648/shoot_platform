@@ -11,17 +11,18 @@ from models.Weapon import Pistol
 
 
 class MainCharacter(LevelObject):
-    def __init__(self, scene, spawn_cell: tuple, *groups, width=Properties.WIDTH, height=Properties.HEIGHT):
-        super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - width) // 2,
-                         Cell.HEIGHT * (spawn_cell[1] + 1) - height, width, height, *groups)
-        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+    WIDTH = Properties.WIDTH
+    HEIGHT = Properties.HEIGHT
+    ANIMATION = Properties.ANIMATION
+
+    def __init__(self, scene, spawn_cell: tuple, *groups):
+        super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - self.WIDTH) // 2,
+                         Cell.HEIGHT * (spawn_cell[1] + 1) - self.HEIGHT, *groups)
         self.speed_y = Float(0)
         self.speed_x = Float(0)
         self.last_x_direction = DirectionX.LEFT
-        self.animation = Animation(self, Properties.ANIMATION, 'none')
         self.weapon = None
         self.set_weapon(Pistol(self.scene, self, 24))
-        self.image = self.animation.get_current_image()
 
     def is_grounded(self):
         if Float(self.speed_y) != 0:
@@ -75,14 +76,11 @@ class MainCharacter(LevelObject):
     def get_last_x_direction(self):
         return self.last_x_direction
 
-    def update_camera_rect(self):
-        super(MainCharacter, self).update_camera_rect()
+    def get_render_rect(self):
+        rect = super().get_render_rect()
         if self.last_x_direction == DirectionX.LEFT:
-            self.rect.x -= self.get_weapon_extra_width()
-
-    def update_sprite(self):
-        self.rect = self.get_render_rect()
-        self.image = self.animation.update()
+            rect.x -= self.get_weapon_extra_width()
+        return rect
 
     def process_logic(self, events):
         pressed = pg.key.get_pressed()
@@ -122,4 +120,3 @@ class MainCharacter(LevelObject):
         if pg.mouse.get_pressed(3)[0]:
             if self.weapon is not None:
                 self.weapon.fire()
-        self.update_sprite()

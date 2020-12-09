@@ -1,5 +1,6 @@
 import pygame as pg
 from enums import TextAlign, PositionX, PositionY
+from functions import get_surface
 
 from models.GameObject import GameObject, PositionalGameObject
 from constants import Basic, Color
@@ -8,7 +9,7 @@ from constants import Basic, Color
 class Text(GameObject):
     def __init__(self, scene, *groups, x=0, y=0, font_size=Basic.FONT_SIZE, text='Hello, world!',
                  line_spacing=5, align=TextAlign.LEFT, color=Color.ORANGE, render_level=3):
-        super().__init__(scene, x, y, 0, 0, *groups, render_level=render_level)
+        super().__init__(scene, x, y, *groups, render_level=render_level)
         self.font = pg.font.Font(Basic.FONT_PATH, font_size)
         self.text = text
         self.color = color
@@ -27,8 +28,7 @@ class Text(GameObject):
             max_width = max(max_width, image.get_width())
             height += image.get_height()
         height += self.line_spacing * (len(arr) - 1)
-        self.image = pg.Surface((max_width, height), pg.SRCALPHA)
-        self.image.fill((0, 0, 0, 0))
+        image = get_surface(max_width, height)
         height = 0
         for i in arr:
             x = 0
@@ -38,14 +38,11 @@ class Text(GameObject):
                 x = (max_width - i.get_width()) // 2
             elif self.align == TextAlign.RIGHT:
                 x = max_width - i.get_width()
-            self.image.blit(i, (x, height))
+            image.blit(i, (x, height))
             height += i.get_height() + self.line_spacing
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
-        self.rect = pg.Rect((self.x, self.y), self.image.get_size())
-
-    def process_logic(self, events):
-        pass
+        self.width = image.get_width()
+        self.height = image.get_height()
+        self.set_image(image)
 
 
 class PositionalText(Text, PositionalGameObject):

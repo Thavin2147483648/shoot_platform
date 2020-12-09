@@ -1,12 +1,13 @@
 from enums import PositionX, PositionY
 from constants import AmmoIndicator as Properties
+from functions import get_surface
 from models.GameObject import PositionalGameObject
 import pygame as pg
 
 
 class AmmoIndicator(PositionalGameObject):
     def __init__(self, scene, *groups, position_x=PositionX.LEFT, position_y=PositionY.BOTTOM):
-        super().__init__(scene, position_x, position_y, 0, 0, *groups)
+        super().__init__(scene, position_x, position_y, *groups)
         self.max = 0
         self.current = 0
         self.full_image = pg.image.load(Properties.FULL_IMAGE_PATH)
@@ -26,20 +27,17 @@ class AmmoIndicator(PositionalGameObject):
             self.set_current(weapon.get_remaining())
 
     def update_surface(self):
-        self.image = pg.Surface((self.width, self.height), pg.SRCALPHA)
-        self.image.fill((0, 0, 0, 0))
+        image = get_surface(self.width, self.height)
         for i in range(self.max):
             if i < self.current:
                 img = self.full_image
             else:
                 img = self.empty_image
-            self.image.blit(img, ((Properties.WIDTH + Properties.OFFSET_X) * i, 0))
+            image.blit(img, ((Properties.WIDTH + Properties.OFFSET_X) * i, 0))
+        self.set_image(image)
         self.update_position()
 
     def set_current(self, value):
         if 0 <= value <= self.max:
             self.current = value
             self.update_surface()
-
-    def process_logic(self, events):
-        pass

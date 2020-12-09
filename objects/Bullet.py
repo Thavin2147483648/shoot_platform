@@ -6,11 +6,13 @@ from enums import DirectionX
 
 
 class Bullet(LevelObject):
-    def __init__(self, scene, x, y, direction_x, *groups, width=Properties.WIDTH, height=Properties.HEIGHT):
-        super().__init__(scene, x, y, width, height, *groups)
-        self.rect = self.get_render_rect()
-        self.image = pg.image.load(Properties.LEFT_IMAGE_PATH if direction_x == DirectionX.LEFT
-                                   else Properties.RIGHT_IMAGE_PATH)
+    WIDTH = Properties.WIDTH
+    HEIGHT = Properties.HEIGHT
+
+    def __init__(self, scene, x, y, direction_x, *groups):
+        super().__init__(scene, x, y, *groups)
+        self.set_image(Properties.LEFT_IMAGE_PATH if direction_x == DirectionX.LEFT
+                       else Properties.RIGHT_IMAGE_PATH)
         self.speed_x = Properties.SPEED
         if direction_x == DirectionX.LEFT:
             self.speed_x *= -1

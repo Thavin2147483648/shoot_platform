@@ -9,35 +9,35 @@ from constants import Cell
 
 
 class LevelObject(GameObject):
-    def __init__(self, scene: LevelScene, x, y, width, height, *groups: AbstractGroup, render_level=2):
-        super().__init__(scene, x, y, width, height, *groups, render_level=render_level)
+    def __init__(self, scene: LevelScene, x, y, *groups: AbstractGroup, render_level=2):
+        super().__init__(scene, x, y, *groups, render_level=render_level)
 
-    def update_camera_rect(self):
+    def get_render_rect(self):
         camera = self.scene.get_camera()
-        self.rect.x -= camera.x
-        self.rect.y -= camera.y
+        rect = super(LevelObject, self).get_render_rect()
+        rect.x -= camera.x
+        rect.y -= camera.y
+        return rect
 
     def update(self, *args, **kwargs) -> None:
         super().update(*args, **kwargs)
         camera = self.scene.get_camera()
-        self.update_camera_rect()
-        if not rect_collide(self.rect, pg.Rect(0, 0, camera.width, camera.height)):
+        if not rect_collide(self.get_render_rect(), pg.Rect(0, 0, camera.width, camera.height)):
             self.hide()
         else:
             self.show()
 
-    def process_logic(self, events):
-        pass
-
 
 class StaticLevelObject(LevelObject):
-    def __init__(self, scene, cell_x, cell_y, width, height, *groups, position_x=PositionX.MIDDLE,
-                 position_y=PositionY.BOTTOM, render_level=1):
-        super().__init__(scene, 0, 0, width, height, *groups, render_level=render_level)
+    CELL_POSITION_X = PositionX.MIDDLE
+    CELL_POSITION_Y = PositionY.BOTTOM
+
+    def __init__(self, scene, cell_x, cell_y, *groups, render_level=1):
+        super().__init__(scene, 0, 0, *groups, render_level=render_level)
         self.cell_x = cell_x
         self.cell_y = cell_y
-        self.position_x = position_x
-        self.position_y = position_y
+        self.position_x = self.CELL_POSITION_X
+        self.position_y = self.CELL_POSITION_Y
         self.x, self.y = self.get_coords()
 
     def get_coords(self):

@@ -1,3 +1,4 @@
+import pygame as pg
 from models.Float import Float
 
 
@@ -16,6 +17,12 @@ def get_sign(n):
     if n >= 0:
         return 1
     return -1
+
+
+def get_surface(width, height):
+    surface = pg.Surface((width, height), pg.SRCALPHA)
+    surface.fill((0, 0, 0, 0))
+    return surface
 
 
 def custom_round(n):

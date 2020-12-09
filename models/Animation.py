@@ -10,7 +10,7 @@ class Animation:
                         (изображение_n, длительность_n*))
     * длительность измеряется в количестве кадров
     """
-    def __init__(self, obj: GameObject, dct, current):
+    def __init__(self, obj: GameObject, dct: [dict, str], current='none'):
         self.dct = {}
         self.override_animations(dct)
         self.obj = obj
@@ -25,11 +25,14 @@ class Animation:
         return self.obj.scene.game.get_frames()
 
     def override_animations(self, dct):
+        if type(dct) is str:
+            dct = {'none': ((dct, 1),)}
         for name in dct:
             self.override_animation(name, dct[name])
 
     def override_animation(self, name, value):
         arr = []
+        print('value =', value)
         for i in value:
             arr.append((pg.image.load(i[0]), i[1]))
         self.dct[name] = tuple(arr)

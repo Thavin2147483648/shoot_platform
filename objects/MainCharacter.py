@@ -36,6 +36,9 @@ class MainCharacter(LevelObject):
             return 0
         return self.weapon.extra_width
 
+    def get_weapon(self):
+        return self.weapon
+
     def set_weapon(self, weapon):
         self.weapon = weapon
         self.scene.get_object('ammo_indicator').attach_weapon(self.weapon)
@@ -83,9 +86,6 @@ class MainCharacter(LevelObject):
 
     def process_logic(self, events):
         pressed = pg.key.get_pressed()
-        if pressed[pg.K_r]:
-            if self.weapon is not None:
-                self.weapon.set_remaining(self.weapon.CAPACITY)
         if pressed[pg.K_a]:
             self.speed_x = -Properties.X_SPEED
         if pressed[pg.K_d]:

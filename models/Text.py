@@ -2,7 +2,7 @@ import pygame as pg
 from enums import TextAlign, PositionX, PositionY
 
 from models.GameObject import GameObject, PositionalGameObject
-from constants import Basic, Color, Screen
+from constants import Basic, Color
 
 
 class Text(GameObject):

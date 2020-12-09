@@ -1,11 +1,10 @@
 from abc import ABC
-import pygame as pg
 import json
 from os import path
 
 from models.Scene import Scene
 from models.Camera import Camera
-from constants import Cell, Color
+from constants import Cell
 from pygame.sprite import Group, GroupSingle
 
 from objects.AmmoIndicator import AmmoIndicator
@@ -14,7 +13,8 @@ from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
 from objects.PlayerSpawn import PlayerSpawn
 from objects.Score import Score
-from objects.Coin import Coin
+from objects.bonus_items.Ammo import Ammo
+from objects.bonus_items.Coin import Coin
 from objects.Air import Air
 from objects.Wall import Wall
 from models.Text import TextAlign, PositionalText, PositionX, PositionY
@@ -23,6 +23,7 @@ from models.Text import TextAlign, PositionalText, PositionX, PositionY
 class LevelScene(Scene, ABC):
     OBJ_CLASSES = {
         'coin': Coin,
+        'ammo': Ammo,
         'exit': Exit,
         'platform': Platform,
         'wall': Wall

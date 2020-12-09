@@ -71,6 +71,9 @@ class Pistol(Weapon):
     def get_remaining(self):
         return self.remaining
 
+    def reload(self):
+        self.set_remaining(self.CAPACITY)
+
     def set_remaining(self, value):
         self.remaining = sorted([0, value, self.CAPACITY])[1]
         self.scene.get_object('ammo_indicator').set_current(self.remaining)

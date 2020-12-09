@@ -66,14 +66,23 @@ class Wall:
     IMAGE_PATH = 'textures/wall/wall.png'
 
 
+class BonusItem:
+    HESITATION_S = tuple(
+        [0] * 2 + [1] * 2 + [2] * 2 + [3] * 2 + [4] * 2 + [5] * 3 + [6] * 3
+    )
+
+
 class Coin:
     WIDTH = 32
     HEIGHT = 32
     IMAGE_PATH = 'textures/coin.png'
     SCORE_ADD = 100
-    HESITATION_S = tuple(
-        [0] * 2 + [1] * 2 + [2] * 2 + [3] * 2 + [4] * 2 + [5] * 3 + [6] * 3
-    )
+
+
+class Ammo:
+    WIDTH = 48
+    HEIGHT = 32
+    IMAGE_PATH = 'textures/ammo.png'
 
 
 class Exit:

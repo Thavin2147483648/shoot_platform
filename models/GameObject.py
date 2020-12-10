@@ -34,7 +34,6 @@ class GameObject(Sprite):
         return pg.Rect(int(Float(self.x)), int(Float(self.y)), self.width, self.height)
 
     def get_render_image(self):
-        print(self.animation.get_current_image())
         return self.animation.get_current_image()
 
     def set_image(self, image):

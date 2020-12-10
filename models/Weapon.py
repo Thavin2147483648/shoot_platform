@@ -10,9 +10,9 @@ class Weapon(ABC):
     OFFSET_Y = 0
     RELOAD_TIME = 0
     CAPACITY = 0
+    EXTRA_WIDTH = 0
 
-    def __init__(self, scene, player, extra_width):
-        self.extra_width = extra_width
+    def __init__(self, scene, player):
         self.scene = scene
         self.player = player
         self.remaining = self.CAPACITY
@@ -32,17 +32,18 @@ class Weapon(ABC):
         pass
 
     def get_extra_width(self):
-        return self.extra_width
+        return self.EXTRA_WIDTH
 
 
 class Pistol(Weapon):
     OFFSET_Y = 42
-    RELOAD_TIME = 60
+    RELOAD_TIME = 40
     CAPACITY = 8
+    EXTRA_WIDTH = 24
 
     def get_animation(self):
         path = MainCharacter.ANIMATION_PATH + '/weapon/pistol'
-        return {
+        dct = {
             'none_left': ((path + '/walk_left_1.png', 1),),
             'none_right': ((path + '/walk_right_1.png', 1),),
             'walk_right': ((path + '/walk_right_0.png', 30), (path + '/walk_right_1.png', 30)),
@@ -50,11 +51,20 @@ class Pistol(Weapon):
             'jump_right': ((path + '/walk_right_1.png', 1),),
             'jump_left': ((path + '/walk_left_1.png', 1),),
         }
+        delay = (1, 1, 5, 5)
+        for d in ('left', 'right'):
+            name = 'shoot_' + d
+            dct[name] = []
+            for i in range(4):
+                dct[name].append((path + '/shooting/' + d + '_' + str(i) + '.png', delay[i]))
+            dct[name] = tuple(dct.get(name))
+        return dct
 
     def fire(self):
         if not self.can_fire():
             return False
         d = self.player.get_last_x_direction()
+        d_str = ('left' if d == DirectionX.LEFT else 'right')
         if d == DirectionX.LEFT:
             bullet = Bullet(self.scene, self.player.get_x1() - self.get_extra_width() - BulletProperties.WIDTH,
                             self.player.get_y1() + self.OFFSET_Y, d)
@@ -62,10 +72,10 @@ class Pistol(Weapon):
             bullet = Bullet(self.scene, self.player.get_x2() + self.get_extra_width(),
                             self.player.get_y1() + self.OFFSET_Y, d)
         self.scene.groups['main'].add(bullet)
-        self.scene.groups['level_objects'].add(bullet)
         self.scene.groups['can_collide'].add(bullet)
         self.set_remaining(self.remaining - 1)
         self.remaining_time = self.RELOAD_TIME
+        self.player.animation.play_once('shoot_' + d_str)
         self.last_frames = self.scene.game.get_frames()
 
     def get_remaining(self):

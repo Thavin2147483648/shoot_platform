@@ -9,8 +9,13 @@ from constants import Cell
 
 
 class LevelObject(GameObject):
+    CAN_COLLIDE = False
+
     def __init__(self, scene: LevelScene, x, y, *groups: AbstractGroup, render_level=2):
         super().__init__(scene, x, y, *groups, render_level=render_level)
+        self.can_collide = self.CAN_COLLIDE
+        if self.can_collide:
+            self.scene.groups['can_collide'].add(self)
 
     def get_render_rect(self):
         camera = self.scene.get_camera()
@@ -22,7 +27,7 @@ class LevelObject(GameObject):
     def update(self, *args, **kwargs) -> None:
         super().update(*args, **kwargs)
         camera = self.scene.get_camera()
-        if not rect_collide(self.get_render_rect(), pg.Rect(0, 0, camera.width, camera.height)):
+        if not camera.can_see(self):
             self.hide()
         else:
             self.show()

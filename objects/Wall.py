@@ -8,3 +8,4 @@ class Wall(StaticLevelObject):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.IMAGE_PATH
+    CAN_COLLIDE = True

@@ -12,3 +12,4 @@ class Platform(StaticLevelObject):
     ANIMATION = Properties.IMAGE_PATH
     CELL_POSITION_X = PositionX.MIDDLE
     CELL_POSITION_Y = PositionY.TOP
+    CAN_COLLIDE = True

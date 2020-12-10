@@ -14,20 +14,23 @@ class MainCharacter(LevelObject):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.ANIMATION
+    CAN_COLLIDE = True
 
     def __init__(self, scene, spawn_cell: tuple, *groups):
         super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - self.WIDTH) // 2,
                          Cell.HEIGHT * (spawn_cell[1] + 1) - self.HEIGHT, *groups)
         self.speed_y = Float(0)
         self.speed_x = Float(0)
-        self.last_x_direction = DirectionX.LEFT
+        self.last_x_direction = DirectionX.RIGHT
         self.weapon = None
-        self.set_weapon(Pistol(self.scene, self, 24))
+        self.set_weapon(Pistol(self.scene, self))
 
     def is_grounded(self):
         if Float(self.speed_y) != 0:
             return False
         for obj in self.scene.get_objects('can_collide'):
+            if obj is self:
+                continue
             if self.get_x2() > obj.get_x1() and self.get_x1() < obj.get_x2() and self.get_y2() == obj.get_y1():
                 return True
         return False
@@ -35,7 +38,7 @@ class MainCharacter(LevelObject):
     def get_weapon_extra_width(self):
         if self.weapon is None:
             return 0
-        return self.weapon.extra_width
+        return self.weapon.get_extra_width()
 
     def get_weapon(self):
         return self.weapon
@@ -51,6 +54,8 @@ class MainCharacter(LevelObject):
             vector_y = max(vector_y, -self.get_y())
             self.speed_y = 0
         for obj in self.scene.get_objects('can_collide'):
+            if obj is self:
+                continue
             if self.get_x2() > obj.get_x1() and self.get_x1() < obj.get_x2():
                 if self.get_y2() <= obj.get_y1() < Float(self.get_y2() + vector_y):
                     vector_y = obj.get_y1() - self.get_y2()
@@ -64,6 +69,8 @@ class MainCharacter(LevelObject):
             vector_x = sorted([-self.get_x1(), vector_x, Float(self.scene.get_width() - self.get_x2())])[1]
             self.speed_x = 0
         for obj in self.scene.get_objects('can_collide'):
+            if obj is self:
+                continue
             if self.get_y2() > obj.get_y1() and self.get_y1() < obj.get_y2():
                 if self.get_x2() <= obj.get_x1() < Float(self.get_x2() + vector_x):
                     vector_x = obj.get_x1() - self.get_x2()
@@ -100,8 +107,9 @@ class MainCharacter(LevelObject):
         self.speed_y = Float(self.speed_y)
         if self.get_y() >= self.scene.height:
             self.scene.game_over()
-        if self.speed_x != 0:
-            self.last_x_direction = (DirectionX.RIGHT if self.speed_x > 0 else DirectionX.LEFT)
+        if not self.animation.playing_once:
+            if self.speed_x != 0:
+                self.last_x_direction = (DirectionX.RIGHT if self.speed_x > 0 else DirectionX.LEFT)
         d = ('left' if self.last_x_direction == DirectionX.LEFT else 'right')
         if self.speed_x != 0:
             if self.speed_x > 0:

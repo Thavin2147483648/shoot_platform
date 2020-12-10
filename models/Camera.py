@@ -1,5 +1,6 @@
 import pygame as pg
 from constants import Screen, MainCharacter, Color
+from functions import rect_collide
 from models.Float import Float
 
 
@@ -22,6 +23,9 @@ class Camera:
     def get_inner_pos(self):
         return self.x + self.inner_offset[0], self.y + self.inner_offset[1]
 
+    def get_rect(self):
+        return Float(self.x), Float(self.y), Float(self.x + self.width), Float(self.y + self.height)
+
     def draw_border(self, screen):
         pos1 = self.inner_offset
         pos2 = (pos1[0] + self.inner_size[0], pos1[1] + self.inner_size[1])
@@ -29,6 +33,9 @@ class Camera:
         pg.draw.line(screen, Color.RED, pos1, (pos1[0], pos2[1]))
         pg.draw.line(screen, Color.RED, pos2, (pos1[0], pos2[1]))
         pg.draw.line(screen, Color.RED, pos2, (pos2[0], pos1[1]))
+
+    def can_see(self, obj):
+        return rect_collide(self, obj)
 
     def update(self):
         inner_pos = self.get_inner_pos()

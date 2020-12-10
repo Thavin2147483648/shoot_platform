@@ -8,6 +8,7 @@ from constants import Cell
 from pygame.sprite import Group, GroupSingle
 
 from objects.AmmoIndicator import AmmoIndicator
+from objects.Block import Block
 from objects.Exit import Exit
 from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
@@ -26,7 +27,8 @@ class LevelScene(Scene, ABC):
         'ammo': Ammo,
         'exit': Exit,
         'platform': Platform,
-        'wall': Wall
+        'wall': Wall,
+        'block': Block
     }
 
     """
@@ -54,6 +56,7 @@ class LevelScene(Scene, ABC):
     def init_objects(self):
         for obj in self.OBJ_CLASSES.keys():
             self.groups[obj] = Group()
+        self.groups['can_collide'] = Group()
         with open(self.file_path, 'r') as file:
             data = json.load(file)
             self.cell_width = data['width']
@@ -75,15 +78,11 @@ class LevelScene(Scene, ABC):
                     obj = self.OBJ_CLASSES[obj_name](self, *pos)
                     self.groups[obj_name].add(obj)
                     self.T[pos[0]][pos[1]] = obj
-        self.groups['can_collide'] = Group(*self.get_objects('platform'), *self.get_objects('wall'))
         self.groups['ammo_indicator'] = GroupSingle(AmmoIndicator(self))
         self.groups['main_character'] = GroupSingle(MainCharacter(self,
                                                                   (self.get_object('player_spawn').cell_x,
                                                                    self.get_object('player_spawn').cell_y)))
         self.groups['score'] = GroupSingle(Score(self))
-        self.groups['level_objects'] = Group(self.get_object('main_character'), self.get_object('player_spawn'))
-        for i in self.OBJ_CLASSES.keys():
-            self.groups['level_objects'].add(*self.get_objects(i))
         self.groups['to_exit_text'] = GroupSingle(PositionalText(self, PositionX.RIGHT,
                                                                  PositionY.TOP,
                                                                  text="Press E\nto exit level",

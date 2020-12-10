@@ -51,7 +51,7 @@ class MainCharacter:
 
 
 class Gravitation:
-    G = 0.25
+    G = 0.35
 
 
 class Platform:
@@ -64,6 +64,12 @@ class Wall:
     WIDTH = 56
     HEIGHT = 80
     IMAGE_PATH = 'textures/wall/wall.png'
+
+
+class Block:
+    WIDTH = 80
+    HEIGHT = 80
+    IMAGE_PATH = 'textures/block.png'
 
 
 class BonusItem:
@@ -109,7 +115,7 @@ class Bullet:
     HEIGHT = 4
     LEFT_IMAGE_PATH = 'textures/bullet/bullet_left.png'
     RIGHT_IMAGE_PATH = 'textures/bullet/bullet_right.png'
-    SPEED = 16
+    SPEED = 64
 
 
 class AmmoIndicator:

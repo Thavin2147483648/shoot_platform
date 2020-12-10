@@ -16,10 +16,17 @@ class Animation:
         self.start = 0
         self.pointer = 0
         self.frames_cnt = 0
+        self.last_animation = ''
+        self.playing_once = False
         self.set_animation(current)
 
     def get_frames(self):
         return self.obj.scene.game.get_frames()
+
+    def play_once(self, name):
+        self.last_animation = self.get_animation()
+        self.set_animation(name)
+        self.playing_once = True
 
     def override_animations(self, dct):
         if type(dct) is not dict:
@@ -39,12 +46,12 @@ class Animation:
         self.dct[name] = tuple(arr)
 
     def set_animation(self, animation):
-        if self.get_animation() == animation:
+        if self.get_animation() == animation or self.playing_once:
             return
         self.current_name = animation
         self.start = self.get_frames()
         self.pointer = 0
-        self.frames_cnt = 0
+        self.frames_cnt = -1
 
     def get_animation(self):
         return self.current_name
@@ -59,6 +66,10 @@ class Animation:
         current = self.get_current()
         self.frames_cnt += 1
         if self.frames_cnt >= current[self.pointer][1]:
-            self.pointer = (self.pointer + 1) % len(current)
+            if self.pointer == len(current) - 1 and self.playing_once:
+                self.playing_once = False
+                self.set_animation(self.last_animation)
+            else:
+                self.pointer = (self.pointer + 1) % len(current)
             self.frames_cnt = 0
         return self.get_current_image()

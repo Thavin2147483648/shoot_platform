@@ -8,6 +8,7 @@ from enums import DirectionX
 class Bullet(LevelObject):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
+    CAN_COLLIDE = True
 
     def __init__(self, scene, x, y, direction_x, *groups):
         super().__init__(scene, x, y, *groups)
@@ -22,6 +23,8 @@ class Bullet(LevelObject):
             vector = sorted([-self.get_x1(), vector, Float(self.scene.get_width() - self.get_x2())])[1]
             self.speed_x = 0
         for obj in self.scene.get_objects('can_collide'):
+            if obj is self:
+                continue
             if self.get_y2() > obj.get_y1() and self.get_y1() < obj.get_y2():
                 if self.get_x2() <= obj.get_x1() < Float(self.get_x2() + vector):
                     vector = obj.get_x1() - self.get_x2()

@@ -51,6 +51,9 @@ class GameObject(Sprite):
     def get_x1(self):
         return self.get_x()
 
+    def get_middle_x(self):
+        return Float((self.get_x1() + self.get_x2()) / 2)
+
     def get_x2(self):
         return Float(self.x + self.width)
 
@@ -59,6 +62,9 @@ class GameObject(Sprite):
 
     def get_y1(self):
         return self.get_y()
+
+    def get_middle_y(self):
+        return Float((self.get_y1() + self.get_y2()) / 2)
 
     def get_y2(self):
         return Float(self.y + self.height)

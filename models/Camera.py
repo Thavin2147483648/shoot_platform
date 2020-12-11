@@ -1,6 +1,6 @@
 import pygame as pg
 from constants import Screen, MainCharacter, Color
-from functions import rect_collide
+from functions import rect_collide, is_intersection
 from models.Float import Float
 
 
@@ -35,7 +35,7 @@ class Camera:
         pg.draw.line(screen, Color.RED, pos2, (pos2[0], pos1[1]))
 
     def can_see(self, obj):
-        return rect_collide(self, obj)
+        return is_intersection((0, 0, self.width, self.height), obj.get_render_rect())
 
     def update(self):
         inner_pos = self.get_inner_pos()

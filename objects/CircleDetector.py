@@ -1,13 +1,13 @@
 from constants import Color
 from functions import get_surface
 from models.Float import Float
-from models.GameObject import GameObject
+from models.LevelObject import LevelObject
 from functions import circle_and_rect_collide
 
 
-class CircleDetector(GameObject):
+class CircleDetector(LevelObject):
     def __init__(self, scene, a: float, b: float, radius: float, *groups):
-        super().__init__(scene, a - radius, b - radius, *groups)
+        super().__init__(scene, a - radius, b - radius, *groups, render_level=1)
         self.a = a
         self.b = b
         self.radius = radius

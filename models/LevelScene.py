@@ -20,6 +20,7 @@ from objects.bonus_items.Coin import Coin
 from objects.Air import Air
 from objects.Wall import Wall
 from models.Text import TextAlign, PositionalText, PositionX, PositionY
+from objects.enemies.Turret import Turret
 
 
 class LevelScene(Scene, ABC):
@@ -88,8 +89,8 @@ class LevelScene(Scene, ABC):
                                                                  PositionY.TOP,
                                                                  text="Press E\nto exit level",
                                                                  align=TextAlign.RIGHT, offset=(10, 10)))
+        self.groups['turret'] = Group(Turret(self, 4, self.cell_height - 2))
         obj = self.get_object(self.camera_obj)
-        self.groups['circle'] = GroupSingle(CircleDetector(self, self.width / 2, self.height - Cell.HEIGHT - 100, 100))
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
     def get_camera(self):

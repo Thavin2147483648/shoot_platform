@@ -13,6 +13,16 @@ def rect_collide(a, b):
                            (b.x, b.y, b.x + b.width, b.y + b.height))
 
 
+# circle: tuple(a, b, radius)
+# rect: tuple(x1, y1, x2, y2)
+def circle_and_rect_collide(rect, circle):
+    def subf(segment: tuple, coord: float):
+        if Float(segment[0]) <= Float(coord) <= Float(segment[1]):
+            return 0
+        return min(Float((coord - segment[0]) ** 2), Float((coord - segment[1]) ** 2))
+    return Float(subf((rect[0], rect[2]), circle[0]) + subf((rect[1], rect[3]), circle[1])) < Float(circle[2] ** 2)
+
+
 def get_sign(n):
     if n >= 0:
         return 1

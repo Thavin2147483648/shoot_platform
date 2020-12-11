@@ -9,6 +9,7 @@ from pygame.sprite import Group, GroupSingle
 
 from objects.AmmoIndicator import AmmoIndicator
 from objects.Block import Block
+from objects.CircleDetector import CircleDetector
 from objects.Exit import Exit
 from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
@@ -88,6 +89,7 @@ class LevelScene(Scene, ABC):
                                                                  text="Press E\nto exit level",
                                                                  align=TextAlign.RIGHT, offset=(10, 10)))
         obj = self.get_object(self.camera_obj)
+        self.groups['circle'] = GroupSingle(CircleDetector(self, self.width / 2, self.height - Cell.HEIGHT - 100, 100))
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
     def get_camera(self):

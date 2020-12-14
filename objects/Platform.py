@@ -13,3 +13,4 @@ class Platform(StaticLevelObject):
     CELL_POSITION_X = PositionX.MIDDLE
     CELL_POSITION_Y = PositionY.TOP
     CAN_COLLIDE = True
+    GROUP_NAME = 'platform'

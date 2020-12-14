@@ -8,3 +8,4 @@ class Air(StaticLevelObject):
     WIDTH = Cell.WIDTH
     HEIGHT = Cell.HEIGHT
     ANIMATION = get_surface(WIDTH, HEIGHT)
+    GROUP_NAME = 'turret'

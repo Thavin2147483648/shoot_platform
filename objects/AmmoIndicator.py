@@ -6,6 +6,8 @@ import pygame as pg
 
 
 class AmmoIndicator(PositionalGameObject):
+    GROUP_NAME = 'ammo_indicator'
+
     def __init__(self, scene, *groups, position_x=PositionX.RIGHT, position_y=PositionY.BOTTOM):
         super().__init__(scene, position_x, position_y, *groups)
         self.max = 0

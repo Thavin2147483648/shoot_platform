@@ -2,19 +2,23 @@ from abc import ABC
 import json
 from os import path
 
+from models.BarIndicator import BarIndicator
+from models.LevelObject import LevelObject
 from models.Scene import Scene
 from models.Camera import Camera
-from constants import Cell
+from constants import Cell, Screen
 from pygame.sprite import Group, GroupSingle
 
 from objects.AmmoIndicator import AmmoIndicator
 from objects.Block import Block
 from objects.CircleDetector import CircleDetector
 from objects.Exit import Exit
+from objects.HealthIndicator import HealthIndicator
 from objects.Platform import Platform
 from objects.MainCharacter import MainCharacter
 from objects.PlayerSpawn import PlayerSpawn
 from objects.Score import Score
+from objects.ToExitText import ToExitText
 from objects.bonus_items.Ammo import Ammo
 from objects.bonus_items.Coin import Coin
 from objects.Air import Air
@@ -36,6 +40,7 @@ class LevelScene(Scene, ABC):
     """
     camera_obj_name - имя объекта, за которым следит камера
     """
+
     def __init__(self, game, index, level_id=1, camera_obj_name='main_character'):
         self.camera = None
         self.cell_width = 0
@@ -56,8 +61,6 @@ class LevelScene(Scene, ABC):
         return self.height
 
     def init_objects(self):
-        for obj in self.OBJ_CLASSES.keys():
-            self.groups[obj] = Group()
         self.groups['can_collide'] = Group()
         with open(self.file_path, 'r') as file:
             data = json.load(file)
@@ -72,26 +75,30 @@ class LevelScene(Scene, ABC):
             self.height = self.cell_height * Cell.HEIGHT
             spawn_cell = int(data['spawn']['x']), int(data['spawn']['y'])
             obj = PlayerSpawn(self, *spawn_cell)
-            self.groups['player_spawn'] = GroupSingle(obj)
+            self.add_object(obj)
             self.T[spawn_cell[0]][spawn_cell[1]] = obj
             for obj_name in data['objects'].keys():
                 for obj_data in data['objects'][obj_name]:
                     pos = int(obj_data['x']), int(obj_data['y'])
                     obj = self.OBJ_CLASSES[obj_name](self, *pos)
-                    self.groups[obj_name].add(obj)
+                    self.add_object(obj)
                     self.T[pos[0]][pos[1]] = obj
-        self.groups['ammo_indicator'] = GroupSingle(AmmoIndicator(self))
-        self.groups['main_character'] = GroupSingle(MainCharacter(self,
-                                                                  (self.get_object('player_spawn').cell_x,
-                                                                   self.get_object('player_spawn').cell_y)))
-        self.groups['score'] = GroupSingle(Score(self))
-        self.groups['to_exit_text'] = GroupSingle(PositionalText(self, PositionX.RIGHT,
-                                                                 PositionY.TOP,
-                                                                 text="Press E\nto exit level",
-                                                                 align=TextAlign.RIGHT, offset=(10, 10)))
-        self.groups['turret'] = Group(Turret(self, 4, self.cell_height - 2))
+        self.add_object(AmmoIndicator(self))
+        self.add_objects(MainCharacter(self, self.get_object('player_spawn').get_cell_pos()),
+                         Score(self), ToExitText(self), Turret(self, 4, self.cell_height - 2))
+        self.add_object(HealthIndicator(self))
         obj = self.get_object(self.camera_obj)
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
+
+    def add_object(self, obj):
+        super(LevelScene, self).add_object(obj)
+        if isinstance(obj, LevelObject):
+            if obj.can_collide:
+                self.groups['can_collide'].add(obj)
+
+    def add_objects(self, *objects):
+        for obj in objects:
+            self.add_object(obj)
 
     def get_camera(self):
         return self.camera

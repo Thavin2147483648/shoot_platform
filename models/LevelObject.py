@@ -14,8 +14,6 @@ class LevelObject(GameObject):
     def __init__(self, scene: LevelScene, x, y, *groups: AbstractGroup, render_level=2):
         super().__init__(scene, x, y, *groups, render_level=render_level)
         self.can_collide = self.CAN_COLLIDE
-        if self.can_collide:
-            self.scene.groups['can_collide'].add(self)
 
     def get_render_rect(self):
         camera = self.scene.get_camera()
@@ -57,3 +55,6 @@ class StaticLevelObject(LevelObject):
         elif self.position_y == PositionY.BOTTOM:
             y += Cell.HEIGHT - self.height
         return x, y
+
+    def get_cell_pos(self):
+        return self.cell_x, self.cell_y

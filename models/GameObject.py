@@ -15,14 +15,19 @@ class GameObject(Sprite):
     WIDTH = 0
     HEIGHT = 0
     ANIMATION = get_surface(10, 10)
+    GROUP_NAME = 'main'
 
     def __init__(self, scene: Scene, x: float, y: float,
-                 *groups: AbstractGroup, render_level=0):
+                 *groups: AbstractGroup, render_level=0, width=None, height=None):
         self.scene = scene
         self.x = x
         self.y = y
-        self.width = int(self.WIDTH)
-        self.height = int(self.HEIGHT)
+        self.width = width
+        self.height = height
+        if width is None:
+            self.width = int(self.WIDTH)
+        if height is None:
+            self.height = int(self.HEIGHT)
         self.render_level = render_level
         if type(self.ANIMATION) is not Animation:
             self.animation = Animation(self, self.ANIMATION)

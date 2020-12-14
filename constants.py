@@ -31,6 +31,8 @@ class Color:
     RED = (255, 0, 0)
     ORANGE = (255, 92, 0)
     GREEN = (0, 255, 0)
+    GRAY = (128, 128, 128)
+    DARK_GRAY = (64, 64, 64)
 
 
 class MainCharacter:
@@ -49,6 +51,7 @@ class MainCharacter:
             'jump_right': ((ANIMATION_PATH + '/walk_right_1.png', 1),),
             'jump_left': ((ANIMATION_PATH + '/walk_left_1.png', 1),),
         }
+    HEALTH = 100.0
 
 
 class Gravitation:
@@ -136,3 +139,16 @@ class Turret:
         'none_left': IMAGE_PATH + '/left.png',
         'none_right': IMAGE_PATH + '/right.png'
     }
+
+
+class HealthIndicator:
+    ICON_BAR_OFFSET = 16  # Расстояние между иконкой и полоской
+    ICON_WIDTH = 80
+    ICON_HEIGHT = 68
+    ICON_IMAGE = 'textures/health.png'
+    BAR_WIDTH = 256
+    BAR_HEIGHT = 24
+    BAR_BORDER_SIZE = (6, 4)
+    BAR_COLOR = (Color.DARK_GRAY, Color.BLACK, (220, 0, 0), Color.ORANGE)
+
+

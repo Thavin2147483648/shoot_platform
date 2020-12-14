@@ -3,6 +3,8 @@ from constants import Score as Properties
 
 
 class Score(PositionalText):
+    GROUP_NAME = 'score'
+
     def __init__(self, scene, *groups, position_x=Properties.POSITION_X,
                  position_y=Properties.POSITION_Y, offset=Properties.OFFSET, color=Properties.COLOR, start_score=0):
         super().__init__(scene, position_x, position_y, *groups, offset=offset, color=color)

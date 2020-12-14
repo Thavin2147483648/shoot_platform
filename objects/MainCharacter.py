@@ -15,6 +15,7 @@ class MainCharacter(LevelObject):
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.ANIMATION
     CAN_COLLIDE = True
+    GROUP_NAME = 'main_character'
 
     def __init__(self, scene, spawn_cell: tuple, *groups):
         super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - self.WIDTH) // 2,
@@ -23,6 +24,9 @@ class MainCharacter(LevelObject):
         self.speed_x = Float(0)
         self.last_x_direction = DirectionX.RIGHT
         self.weapon = None
+        self.max_health = Float(Properties.HEALTH)
+        self.health = 0
+        self.set_health(self.get_max_health())
         self.set_weapon(Pistol(self.scene, self))
 
     def is_grounded(self):
@@ -34,6 +38,18 @@ class MainCharacter(LevelObject):
             if self.get_x2() > obj.get_x1() and self.get_x1() < obj.get_x2() and self.get_y2() == obj.get_y1():
                 return True
         return False
+
+    def get_health(self):
+        return Float(self.health)
+
+    def get_max_health(self):
+        return self.max_health
+
+    def set_health(self, value):
+        if 0 <= self.health <= self.get_max_health():
+            self.health = value
+            if self.scene.object_exists('health_indicator'):
+                self.scene.get_object('health_indicator').set_current(self.health)
 
     def get_weapon_extra_width(self):
         if self.weapon is None:
@@ -90,6 +106,8 @@ class MainCharacter(LevelObject):
         return rect
 
     def process_logic(self, events):
+        if self.get_health() == 0:
+            self.scene.game_over()
         pressed = pg.key.get_pressed()
         if pressed[pg.K_a]:
             self.speed_x = -Properties.X_SPEED

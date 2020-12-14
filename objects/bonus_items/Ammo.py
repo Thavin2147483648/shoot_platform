@@ -6,6 +6,7 @@ class Ammo(BonusItem):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.IMAGE_PATH
+    GROUP_NAME = 'ammo_bonus'
 
     def on_pickup(self):
         weapon = self.scene.get_object('main_character').get_weapon()

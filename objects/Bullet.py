@@ -9,6 +9,7 @@ class Bullet(LevelObject):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     CAN_COLLIDE = True
+    GROUP_NAME = 'bullet'
 
     def __init__(self, scene, x, y, direction_x, *groups):
         super().__init__(scene, x, y, *groups)

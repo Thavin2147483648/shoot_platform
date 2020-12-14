@@ -6,6 +6,8 @@ from functions import circle_and_rect_collide
 
 
 class CircleDetector(LevelObject):
+    GROUP_NAME = 'circle_detector'
+
     def __init__(self, scene, a: float, b: float, radius: float, *groups):
         super().__init__(scene, a - radius, b - radius, *groups, render_level=1)
         self.a = a

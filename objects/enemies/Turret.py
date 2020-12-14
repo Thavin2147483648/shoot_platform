@@ -9,6 +9,7 @@ class Turret(StaticLevelObject):
     EXTRA_WIDTH = 52
     ANIMATION = Properties.ANIMATION
     CAN_COLLIDE = True
+    GROUP_NAME = 'turret'
 
     def __init__(self, scene, cell_x, cell_y, *groups):
         super().__init__(scene, cell_x, cell_y, *groups)

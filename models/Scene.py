@@ -11,21 +11,23 @@ class Scene(ABC):
         self.index = index
         self.to_render = []
         self.groups = {}
+        self.reload()
 
     def reload(self):
-        self.groups = {}
-        self.init_objects()
-        if 'main' in self.groups:
-            exit(-1)
-        main_group = Group()
-        for group in self.groups.values():
-            main_group.add(*group.sprites())
-        self.groups['main'] = main_group
+        self.groups = {
+            'main': Group()
+        }
         self.to_render = []
         for i in range(Basic.RENDER_LEVELS):
             self.to_render.append(Group())
-        for sprite in self.groups['main'].sprites():
-            self.to_render[sprite.render_level].add(sprite)
+        self.init_objects()
+
+    def add_object(self, obj):
+        self.groups['main'].add(obj)
+        if obj.GROUP_NAME not in self.groups:
+            self.groups[obj.GROUP_NAME] = Group()
+        self.groups[obj.GROUP_NAME].add(obj)
+        self.to_render[obj.render_level].add(obj)
 
     # Добавить все игровые объекты в массив groups
     @abstractmethod
@@ -33,10 +35,13 @@ class Scene(ABC):
         pass
 
     def get_object(self, name):
-        return self.groups[name].sprite
+        return self.get_objects(name)[0]
 
     def get_objects(self, name):
         return self.groups[name].sprites()
+
+    def object_exists(self, name):
+        return name in self.groups
 
     def process_logic(self, events):
         for sprite in self.groups['main']:

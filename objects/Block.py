@@ -7,3 +7,4 @@ class Block(StaticLevelObject):
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.IMAGE_PATH
     CAN_COLLIDE = True
+    GROUP_NAME = 'block'

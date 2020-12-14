@@ -8,3 +8,4 @@ class PlayerSpawn(StaticLevelObject):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.IMAGE_PATH
+    GROUP_NAME = 'player_spawn'

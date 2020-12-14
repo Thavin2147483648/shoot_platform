@@ -71,8 +71,7 @@ class Pistol(Weapon):
         else:
             bullet = Bullet(self.scene, self.player.get_x2() + self.get_extra_width(),
                             self.player.get_y1() + self.OFFSET_Y, d)
-        self.scene.groups['main'].add(bullet)
-        self.scene.groups['can_collide'].add(bullet)
+        self.scene.add_object(bullet)
         self.set_remaining(self.remaining - 1)
         self.remaining_time = self.RELOAD_TIME
         self.player.animation.play_once('shoot_' + d_str)

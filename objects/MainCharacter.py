@@ -42,11 +42,14 @@ class MainCharacter(LevelObject):
     def get_health(self):
         return Float(self.health)
 
+    def damage(self, value):
+        self.set_health(max(Float(0), Float(self.get_health() - value)))
+
     def get_max_health(self):
         return self.max_health
 
     def set_health(self, value):
-        if 0 <= self.health <= self.get_max_health():
+        if 0 <= value <= self.get_max_health():
             self.health = value
             if self.scene.object_exists('health_indicator'):
                 self.scene.get_object('health_indicator').set_current(self.health)

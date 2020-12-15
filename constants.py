@@ -119,7 +119,8 @@ class Bullet:
     HEIGHT = 4
     LEFT_IMAGE_PATH = 'textures/bullet/bullet_left.png'
     RIGHT_IMAGE_PATH = 'textures/bullet/bullet_right.png'
-    SPEED = 64
+    SPEED = 32
+    DAMAGE = 5
 
 
 class AmmoIndicator:

@@ -43,6 +43,9 @@ class BarIndicator:
             self.update_image()
         return self.image
 
+    def get_current(self):
+        return Float(self.current)
+
     def set_current(self, value):
         if 0 <= value <= self.max:
             self.current = value

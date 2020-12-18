@@ -43,6 +43,9 @@ class Scene(ABC):
     def object_exists(self, name):
         return name in self.groups
 
+    def get_group(self, name):
+        return self.groups.get(name, Group())
+
     def process_logic(self, events):
         for sprite in self.groups['main']:
             sprite.process_logic(events)

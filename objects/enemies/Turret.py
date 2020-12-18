@@ -1,11 +1,15 @@
+from models.BarIndicator import BarIndicatorColor, BarIndicator
+from models.Float import Float
 from models.LevelObject import StaticLevelObject
 from constants import Turret as Properties
 from enums import DirectionX
+from models.ObjectWithHealth import ObjectWithHealth
 from objects.Bullet import Bullet
-from constants import Bullet as BulletProperties
+from constants import Bullet as BulletProperties, HealthIndicator
+from models.ObjectHealthIndicator import ObjectHealthIndicator
 
 
-class Turret(StaticLevelObject):
+class Turret(StaticLevelObject, ObjectWithHealth):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     EXTRA_WIDTH = 52
@@ -14,14 +18,21 @@ class Turret(StaticLevelObject):
     GROUP_NAME = 'turret'
     SHOOT_PERIOD = 50
     OFFSET_Y = 18
+    DAMAGEABLE = True
+    HEALTH = Properties.HEALTH
 
     def __init__(self, scene, cell_x, cell_y, *groups, shoot_period=SHOOT_PERIOD):
         super().__init__(scene, cell_x, cell_y, *groups)
+        ObjectWithHealth.__init__(self)
         self.extra_width = self.EXTRA_WIDTH
         self.direction_x = DirectionX.LEFT
         self.shoot_period = shoot_period
+        self.health_indicator = ObjectHealthIndicator(scene, self)
+        self.scene.add_object(self.health_indicator)
 
     def process_logic(self, events):
+        if self.is_dead():
+            self.kill()
         player = self.scene.get_object('main_character')
         if player.get_middle_x() <= self.get_middle_x():
             self.direction_x = DirectionX.LEFT
@@ -57,3 +68,7 @@ class Turret(StaticLevelObject):
             bullet = Bullet(self.scene, self.get_x2() + self.get_extra_width(),
                             self.get_y1() + self.OFFSET_Y, d)
         self.scene.add_object(bullet)
+        
+    def kill(self) -> None:
+        self.health_indicator.kill()
+        super(Turret, self).kill()

@@ -39,8 +39,8 @@ class Bullet(LevelObject):
                     collided_object = obj
                     self.speed_x = 0
         if collided_object is not None:
-            if collided_object is self.scene.get_object('main_character'):
-                self.scene.get_object('main_character').damage(self.damage)
+            if self.scene.get_group('damageable').has(collided_object):
+                collided_object.damage(self.damage)
         self.x += vector
 
     def process_logic(self, events):

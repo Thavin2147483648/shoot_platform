@@ -43,7 +43,7 @@ class Game:
         self.get_scene().render()
         pg.display.flip()
         self.frames_cnt += 1
-        print(pg.time.get_ticks() - t)
+        # print(pg.time.get_ticks() - t)
         pg.time.delay(Basic.FRAME_DELAY - (pg.time.get_ticks() - t))
 
     def get_frames(self):

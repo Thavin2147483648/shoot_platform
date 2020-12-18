@@ -7,15 +7,18 @@ from models.Float import Float
 from models.LevelObject import LevelObject
 from constants import MainCharacter as Properties, Color, Screen, Gravitation, Cell
 from functions import custom_round
+from models.ObjectWithHealth import ObjectWithHealth
 from models.Weapon import Pistol
 
 
-class MainCharacter(LevelObject):
+class MainCharacter(LevelObject, ObjectWithHealth):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.ANIMATION
     CAN_COLLIDE = True
     GROUP_NAME = 'main_character'
+    DAMAGEABLE = True
+    HEALTH = Properties.HEALTH
 
     def __init__(self, scene, spawn_cell: tuple, *groups):
         super().__init__(scene, Cell.WIDTH * spawn_cell[0] + (Cell.WIDTH - self.WIDTH) // 2,
@@ -24,10 +27,8 @@ class MainCharacter(LevelObject):
         self.speed_x = Float(0)
         self.last_x_direction = DirectionX.RIGHT
         self.weapon = None
-        self.max_health = Float(Properties.HEALTH)
-        self.health = 0
-        self.set_health(self.get_max_health())
         self.set_weapon(Pistol(self.scene, self))
+        ObjectWithHealth.__init__(self)
 
     def is_grounded(self):
         if Float(self.speed_y) != 0:
@@ -38,21 +39,6 @@ class MainCharacter(LevelObject):
             if self.get_x2() > obj.get_x1() and self.get_x1() < obj.get_x2() and self.get_y2() == obj.get_y1():
                 return True
         return False
-
-    def get_health(self):
-        return Float(self.health)
-
-    def damage(self, value):
-        self.set_health(max(Float(0), Float(self.get_health() - value)))
-
-    def get_max_health(self):
-        return self.max_health
-
-    def set_health(self, value):
-        if 0 <= value <= self.get_max_health():
-            self.health = value
-            if self.scene.object_exists('health_indicator'):
-                self.scene.get_object('health_indicator').set_current(self.health)
 
     def get_weapon_extra_width(self):
         if self.weapon is None:
@@ -109,7 +95,7 @@ class MainCharacter(LevelObject):
         return rect
 
     def process_logic(self, events):
-        if self.get_health() == 0:
+        if self.is_dead():
             self.scene.game_over()
         pressed = pg.key.get_pressed()
         if pressed[pg.K_a]:
@@ -127,7 +113,7 @@ class MainCharacter(LevelObject):
         self.speed_x = Float(self.speed_x)
         self.speed_y = Float(self.speed_y)
         if self.get_y() >= self.scene.height:
-            self.scene.game_over()
+            self.damage(self.get_max_health())
         if not self.animation.playing_once:
             if self.speed_x != 0:
                 self.last_x_direction = (DirectionX.RIGHT if self.speed_x > 0 else DirectionX.LEFT)

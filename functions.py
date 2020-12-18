@@ -29,9 +29,9 @@ def get_sign(n):
     return -1
 
 
-def get_surface(width, height):
+def get_surface(width, height, color=(0, 0, 0, 0)):
     surface = pg.Surface((width, height), pg.SRCALPHA)
-    surface.fill((0, 0, 0, 0))
+    surface.fill(color)
     return surface
 
 

@@ -10,10 +10,12 @@ from constants import Cell
 
 class LevelObject(GameObject):
     CAN_COLLIDE = False
+    DAMAGEABLE = False
 
     def __init__(self, scene: LevelScene, x, y, *groups: AbstractGroup, render_level=2):
         super().__init__(scene, x, y, *groups, render_level=render_level)
         self.can_collide = self.CAN_COLLIDE
+        self.damageable = self.DAMAGEABLE
 
     def get_render_rect(self):
         camera = self.scene.get_camera()

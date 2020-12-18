@@ -135,6 +135,7 @@ class Turret:
     WIDTH = 80
     HEIGHT = 100
     IMAGE_PATH = 'textures/turret'
+    HEALTH = 15
     ANIMATION = {
         'none': IMAGE_PATH + '/left.png',
         'none_left': IMAGE_PATH + '/left.png',
@@ -153,3 +154,9 @@ class HealthIndicator:
     BAR_COLOR = (Color.DARK_GRAY, Color.BLACK, (220, 0, 0), Color.ORANGE)
 
 
+class ObjectHealthIndicator:
+    WIDTH = 100
+    HEIGHT = 12
+    BORDER_SIZE = (3, 2)
+    BAR_COLOR = HealthIndicator.BAR_COLOR
+    OFFSET_Y = 20

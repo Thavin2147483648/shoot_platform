@@ -34,7 +34,8 @@ class LevelScene(Scene, ABC):
         'exit': Exit,
         'platform': Platform,
         'wall': Wall,
-        'block': Block
+        'block': Block,
+        'turret': Turret
     }
 
     """
@@ -62,6 +63,7 @@ class LevelScene(Scene, ABC):
 
     def init_objects(self):
         self.groups['can_collide'] = Group()
+        self.groups['damageable'] = Group()
         with open(self.file_path, 'r') as file:
             data = json.load(file)
             self.cell_width = data['width']
@@ -84,9 +86,9 @@ class LevelScene(Scene, ABC):
                     self.add_object(obj)
                     self.T[pos[0]][pos[1]] = obj
         self.add_object(AmmoIndicator(self))
-        self.add_objects(MainCharacter(self, self.get_object('player_spawn').get_cell_pos()),
-                         Score(self), ToExitText(self), Turret(self, 4, self.cell_height - 2))
         self.add_object(HealthIndicator(self))
+        self.add_objects(MainCharacter(self, self.get_object('player_spawn').get_cell_pos()),
+                         Score(self), ToExitText(self))
         obj = self.get_object(self.camera_obj)
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))
 
@@ -95,6 +97,8 @@ class LevelScene(Scene, ABC):
         if isinstance(obj, LevelObject):
             if obj.can_collide:
                 self.groups['can_collide'].add(obj)
+            if obj.damageable:
+                self.groups['damageable'].add(obj)
 
     def add_objects(self, *objects):
         for obj in objects:

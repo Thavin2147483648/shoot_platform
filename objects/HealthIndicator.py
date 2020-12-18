@@ -2,6 +2,7 @@ import pygame as pg
 
 from functions import get_surface
 from models.BarIndicator import BarIndicatorColor
+from models.Float import Float
 from models.GameObject import PositionalGameObject
 from models.BarIndicator import BarIndicator
 from enums import PositionX, PositionY
@@ -33,9 +34,18 @@ class HealthIndicator(PositionalGameObject):
         image.blit(self.icon, (0, (self.height - self.icon_height) // 2))
         image.blit(self.bar.get_image(), (self.icon_width + self.icon_bar_offset, (self.height - self.bar.height) // 2))
         self.set_image(image)
+        print(self.current)
         self.update_position()
 
     def set_current(self, current):
         if 0 <= current <= self.max:
             self.current = current
             self.update_surface()
+
+    def get_current(self):
+        return Float(self.current)
+
+    def process_logic(self, events):
+        player = self.scene.get_object('main_character')
+        if player.get_health() != self.get_current():
+            self.set_current(player.get_health())

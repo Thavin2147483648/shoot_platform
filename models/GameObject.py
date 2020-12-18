@@ -50,6 +50,30 @@ class GameObject(Sprite):
     def get_height(self):
         return self.height
 
+    def set_x(self, value):
+        self.x = Float(value)
+
+    def set_x1(self, value):
+        self.set_x(value)
+
+    def set_middle_x(self, value):
+        self.set_x(value - self.get_width() / 2)
+
+    def set_x2(self, value):
+        self.set_x(value - self.get_width())
+
+    def set_y(self, value):
+        self.y = Float(value)
+
+    def set_y1(self, value):
+        self.set_y(value)
+
+    def set_middle_y(self, value):
+        self.set_y(value - self.get_height() / 2)
+
+    def set_y2(self, value):
+        self.set_y(value - self.get_height())
+
     def get_x(self):
         return Float(self.x)
 
@@ -73,6 +97,9 @@ class GameObject(Sprite):
 
     def get_y2(self):
         return Float(self.y + self.height)
+
+    def print_position(self):
+        print('Position: X =', self.get_x(), ' Y =', self.get_y())
 
     def get_rect(self):
         return self.get_x1(), self.get_y1(), self.get_x2(), self.get_y2()

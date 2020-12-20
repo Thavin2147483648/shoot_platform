@@ -14,19 +14,19 @@ class AmmoIndicator(PositionalGameObject):
         self.current = 0
         self.full_image = pg.image.load(Properties.FULL_IMAGE_PATH)
         self.empty_image = pg.image.load(Properties.EMPTY_IMAGE_PATH)
+        self.column_count = 0
+        self.row_count = 0
         self.set_current(self.max)
 
-    def attach_weapon(self, weapon=None):
-        if weapon is None:
-            self.max = 0
-            self.current = 0
-            self.width = 0
-            self.height = 0
-        else:
-            self.max = weapon.CAPACITY
-            self.width = Properties.WIDTH * self.max + Properties.OFFSET_X * (self.max - 1)
-            self.height = Properties.HEIGHT
-            self.set_current(weapon.get_remaining())
+    def attach_weapon(self, weapon):
+        self.max = weapon.CAPACITY
+        self.column_count = weapon.AMMO_INDICATOR_COLUMN_SIZE
+        self.row_count = (self.max + self.column_count - 1) // self.column_count
+        self.width = Properties.WIDTH * min(self.max, self.column_count)
+        self.width += Properties.OFFSET_X * (min(self.max, self.column_count) - 1) * int(self.max != 0)
+        self.height = Properties.HEIGHT * self.row_count
+        self.height += Properties.OFFSET_Y * (self.row_count - 1) * int(self.max != 0)
+        self.set_current(weapon.get_remaining())
 
     def update_surface(self):
         image = get_surface(self.width, self.height)
@@ -35,7 +35,9 @@ class AmmoIndicator(PositionalGameObject):
                 img = self.full_image
             else:
                 img = self.empty_image
-            image.blit(img, ((Properties.WIDTH + Properties.OFFSET_X) * i, 0))
+            x = (Properties.WIDTH + Properties.OFFSET_X) * (i % self.column_count)
+            y = (Properties.HEIGHT + Properties.OFFSET_Y) * (i // self.column_count)
+            image.blit(img, (x, y))
         self.set_image(image)
         self.update_position()
 

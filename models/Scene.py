@@ -14,6 +14,7 @@ class Scene(ABC):
         self.reload()
 
     def reload(self):
+        self.delete_objects()
         self.groups = {
             'main': Group()
         }
@@ -28,6 +29,9 @@ class Scene(ABC):
             self.groups[obj.GROUP_NAME] = Group()
         self.groups[obj.GROUP_NAME].add(obj)
         self.to_render[obj.render_level].add(obj)
+
+    def delete_objects(self):
+        self.get_group('main').empty()
 
     # Добавить все игровые объекты в массив groups
     @abstractmethod

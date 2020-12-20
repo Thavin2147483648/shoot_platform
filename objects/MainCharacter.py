@@ -8,7 +8,7 @@ from models.LevelObject import LevelObject
 from constants import MainCharacter as Properties, Color, Screen, Gravitation, Cell
 from functions import custom_round
 from models.ObjectWithHealth import ObjectWithHealth
-from models.Weapon import Pistol
+from models.Weapon import Pistol, NoneWeapon
 
 
 class MainCharacter(LevelObject, ObjectWithHealth):
@@ -26,8 +26,9 @@ class MainCharacter(LevelObject, ObjectWithHealth):
         self.speed_y = Float(0)
         self.speed_x = Float(0)
         self.last_x_direction = DirectionX.RIGHT
-        self.weapon = None
-        self.set_weapon(Pistol(self.scene, self))
+        self.weapon_index = 0
+        self.weapons = [NoneWeapon(self.scene, self), Pistol(self.scene, self)]
+        self.set_weapon(self.weapon_index)
         ObjectWithHealth.__init__(self)
 
     def is_grounded(self):
@@ -41,17 +42,15 @@ class MainCharacter(LevelObject, ObjectWithHealth):
         return False
 
     def get_weapon_extra_width(self):
-        if self.weapon is None:
-            return 0
-        return self.weapon.get_extra_width()
+        return self.get_weapon().get_extra_width()
 
     def get_weapon(self):
-        return self.weapon
+        return self.weapons[self.weapon_index]
 
-    def set_weapon(self, weapon):
-        self.weapon = weapon
-        self.scene.get_object('ammo_indicator').attach_weapon(self.weapon)
-        self.animation.override_animations(weapon.get_animation())
+    def set_weapon(self, index):
+        self.weapon_index = index
+        self.scene.get_object('ammo_indicator').attach_weapon(self.get_weapon())
+        self.animation.override_animations(self.get_weapon().get_animation())
 
     def add_vectors(self, vector_x, vector_y):
         # Oy
@@ -97,6 +96,9 @@ class MainCharacter(LevelObject, ObjectWithHealth):
     def process_logic(self, events):
         if self.is_dead():
             self.scene.game_over()
+        for event in events:
+            if event.type == pg.KEYDOWN and event.key == pg.K_c:
+                self.set_weapon((self.weapon_index + 1) % len(self.weapons))
         pressed = pg.key.get_pressed()
         if pressed[pg.K_a]:
             self.speed_x = -Properties.X_SPEED
@@ -133,5 +135,4 @@ class MainCharacter(LevelObject, ObjectWithHealth):
             self.animation.set_animation('none_' + d)
         self.speed_x = 0
         if pg.mouse.get_pressed(3)[0]:
-            if self.weapon is not None:
-                self.weapon.fire()
+            self.get_weapon().fire()

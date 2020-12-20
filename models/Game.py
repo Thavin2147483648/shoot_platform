@@ -17,11 +17,12 @@ class Game:
         self.screen.fill(Color.WHITE)
         self.scenes = [MainScene(self, 0, level_id=2)]
         self.scenes.sort(key=lambda x: x.index)
-        self.scenes[self.scene_index].reload()
+        self.move_to_scene(self.scene_index)
 
     def move_to_scene(self, index):
+        self.get_scene().delete_objects()
         self.scene_index = index
-        self.scenes[index].reload()
+        self.get_scene().reload()
 
     def move_to_next_scene(self):
         self.move_to_scene((self.scene_index + 1) % len(self.scenes))

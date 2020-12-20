@@ -129,6 +129,7 @@ class AmmoIndicator:
     FULL_IMAGE_PATH = 'textures/bullet/indicator/full.png'
     EMPTY_IMAGE_PATH = 'textures/bullet/indicator/empty.png'
     OFFSET_X = 5
+    OFFSET_Y = 5
 
 
 class Turret:

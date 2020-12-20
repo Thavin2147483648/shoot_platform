@@ -134,21 +134,18 @@ class PositionalGameObject(GameObject):
 
     def update_position(self):
         if self.position_x == PositionX.LEFT:
-            self.x = self.offset[0]
+            self.set_x(self.offset[0])
         elif self.position_x == PositionX.MIDDLE:
-            self.x = (Screen.WIDTH - self.width) // 2
+            self.set_middle_x(Screen.WIDTH / 2)
         elif self.position_x == PositionX.RIGHT:
-            self.x = Screen.WIDTH - self.width - self.offset[0]
+            self.set_x2(Screen.WIDTH - self.offset[0])
         # Oy
         if self.position_y == PositionY.TOP:
-            self.y = self.offset[1]
+            self.set_y(self.offset[1])
         elif self.position_y == PositionY.MIDDLE:
-            self.y = (Screen.HEIGHT - self.height) // 2
+            self.set_middle_y(Screen.HEIGHT / 2)
         elif self.position_y == PositionY.BOTTOM:
-            self.y = Screen.HEIGHT - self.height - self.offset[1]
-        self.x = Float(self.x)
-        self.y = Float(self.y)
-        self.rect = self.get_render_rect()
+            self.set_y2(Screen.HEIGHT - self.offset[1])
 
     def process_logic(self, events):
         pass

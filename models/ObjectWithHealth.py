@@ -18,7 +18,6 @@ class ObjectWithHealth:
         return Float(self._health)
 
     def set_health(self, value):
-        print('value is', value)
         if Float(0) <= Float(value) <= self.get_max_health():
             self._health = Float(value)
             self.on_health_updated()

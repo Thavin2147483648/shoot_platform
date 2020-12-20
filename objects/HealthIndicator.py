@@ -34,7 +34,6 @@ class HealthIndicator(PositionalGameObject):
         image.blit(self.icon, (0, (self.height - self.icon_height) // 2))
         image.blit(self.bar.get_image(), (self.icon_width + self.icon_bar_offset, (self.height - self.bar.height) // 2))
         self.set_image(image)
-        print(self.current)
         self.update_position()
 
     def set_current(self, current):

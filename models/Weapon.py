@@ -11,6 +11,7 @@ class Weapon(ABC):
     RELOAD_TIME = 0
     CAPACITY = 0
     EXTRA_WIDTH = 0
+    AMMO_INDICATOR_COLUMN_SIZE = 1
 
     def __init__(self, scene, player):
         self.scene = scene
@@ -19,9 +20,8 @@ class Weapon(ABC):
         self.remaining_time = 0
         self.last_frames = 0
 
-    @abstractmethod
     def get_animation(self):
-        pass
+        return MainCharacter.ANIMATION
 
     @abstractmethod
     def fire(self):
@@ -34,12 +34,36 @@ class Weapon(ABC):
     def get_extra_width(self):
         return self.EXTRA_WIDTH
 
+    def get_remaining(self):
+        return self.remaining
+
+    def reload(self):
+        self.set_remaining(self.CAPACITY)
+
+    def set_remaining(self, value):
+        self.remaining = sorted([0, value, self.CAPACITY])[1]
+        self.scene.get_object('ammo_indicator').set_current(self.remaining)
+
+    def update_remaining_time(self):
+        t = self.scene.game.get_frames() - self.last_frames
+        self.last_frames = self.scene.game.get_frames()
+        self.remaining_time = max(0, self.remaining_time - t)
+
+
+class NoneWeapon(Weapon):
+    def fire(self):
+        pass
+
+    def can_fire(self):
+        return False
+
 
 class Pistol(Weapon):
     OFFSET_Y = 42
     RELOAD_TIME = 40
     CAPACITY = 8
     EXTRA_WIDTH = 24
+    AMMO_INDICATOR_COLUMN_SIZE = 8
 
     def get_animation(self):
         path = MainCharacter.ANIMATION_PATH + '/weapon/pistol'
@@ -76,21 +100,6 @@ class Pistol(Weapon):
         self.remaining_time = self.RELOAD_TIME
         self.player.animation.play_once('shoot_' + d_str)
         self.last_frames = self.scene.game.get_frames()
-
-    def get_remaining(self):
-        return self.remaining
-
-    def reload(self):
-        self.set_remaining(self.CAPACITY)
-
-    def set_remaining(self, value):
-        self.remaining = sorted([0, value, self.CAPACITY])[1]
-        self.scene.get_object('ammo_indicator').set_current(self.remaining)
-
-    def update_remaining_time(self):
-        t = self.scene.game.get_frames() - self.last_frames
-        self.last_frames = self.scene.game.get_frames()
-        self.remaining_time = max(0, self.remaining_time - t)
 
     def can_fire(self):
         if self.remaining == 0:

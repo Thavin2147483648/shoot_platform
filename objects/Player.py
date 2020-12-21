@@ -5,18 +5,18 @@ from enums import DirectionX
 from models.Animation import Animation
 from models.Float import Float
 from models.LevelObject import LevelObject
-from constants import MainCharacter as Properties, Color, Screen, Gravitation, Cell
+from constants import Player as Properties, Color, Screen, Gravitation, Cell
 from functions import custom_round
 from models.ObjectWithHealth import ObjectWithHealth
 from models.Weapon import Pistol, NoneWeapon
 
 
-class MainCharacter(LevelObject, ObjectWithHealth):
+class Player(LevelObject, ObjectWithHealth):
     WIDTH = Properties.WIDTH
     HEIGHT = Properties.HEIGHT
     ANIMATION = Properties.ANIMATION
     CAN_COLLIDE = True
-    GROUP_NAME = 'main_character'
+    GROUP_NAME = 'player'
     DAMAGEABLE = True
     HEALTH = Properties.HEALTH
 

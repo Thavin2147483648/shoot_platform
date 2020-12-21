@@ -19,7 +19,7 @@ class BonusItem(StaticLevelObject):
         return True
 
     def process_logic(self, events):
-        if self.collide_with(self.scene.get_object('main_character')) and self.pickup_condition():
+        if self.collide_with(self.scene.get_object('player')) and self.pickup_condition():
             self.on_pickup()
             self.kill()
         frames = self.scene.game.get_frames() % (4 * len(Properties.HESITATION_S))

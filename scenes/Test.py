@@ -1,7 +1,7 @@
 import pygame as pg
 from constants import Screen, Cell, Pixel
 from models.LevelScene import LevelScene
-from objects.MainCharacter import MainCharacter
+from objects.Player import Player
 from objects.Platform import Platform
 from pygame.sprite import Group, GroupSingle
 

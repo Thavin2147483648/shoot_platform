@@ -35,13 +35,13 @@ class Color:
     DARK_GRAY = (64, 64, 64)
 
 
-class MainCharacter:
+class Player:
     WIDTH = 48
     HEIGHT = 96
     JUMP_HEIGHT = 3 * Cell.HEIGHT + 30
     X_SPEED = 4
-    IMAGE_PATH = 'textures/animations/main_character/none.png'
-    ANIMATION_PATH = 'textures/animations/main_character'
+    IMAGE_PATH = 'textures/animations/player/none.png'
+    ANIMATION_PATH = 'textures/animations/player'
     ANIMATION = {
             'none_left': ((IMAGE_PATH, 1),),
             'none': ((IMAGE_PATH, 1),),
@@ -136,7 +136,7 @@ class Turret:
     WIDTH = 80
     HEIGHT = 100
     IMAGE_PATH = 'textures/turret'
-    HEALTH = 15
+    HEALTH = 20
     ANIMATION = {
         'none': IMAGE_PATH + '/left.png',
         'none_left': IMAGE_PATH + '/left.png',

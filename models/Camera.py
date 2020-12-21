@@ -1,5 +1,5 @@
 import pygame as pg
-from constants import Screen, MainCharacter, Color
+from constants import Screen, Player, Color
 from functions import rect_collide, is_intersection
 from models.Float import Float
 

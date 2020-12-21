@@ -15,7 +15,7 @@ from objects.CircleDetector import CircleDetector
 from objects.Exit import Exit
 from objects.HealthIndicator import HealthIndicator
 from objects.Platform import Platform
-from objects.MainCharacter import MainCharacter
+from objects.Player import Player
 from objects.PlayerSpawn import PlayerSpawn
 from objects.Score import Score
 from objects.ToExitText import ToExitText
@@ -42,7 +42,7 @@ class LevelScene(Scene, ABC):
     camera_obj_name - имя объекта, за которым следит камера
     """
 
-    def __init__(self, game, index, level_id=1, camera_obj_name='main_character'):
+    def __init__(self, game, index, level_id=1, camera_obj_name='player'):
         self.camera = None
         self.cell_width = 0
         self.cell_height = 0
@@ -87,7 +87,7 @@ class LevelScene(Scene, ABC):
                     self.T[pos[0]][pos[1]] = obj
         self.add_object(AmmoIndicator(self))
         self.add_object(HealthIndicator(self))
-        self.add_objects(MainCharacter(self, self.get_object('player_spawn').get_cell_pos()),
+        self.add_objects(Player(self, self.get_object('player_spawn').get_cell_pos()),
                          Score(self), ToExitText(self))
         obj = self.get_object(self.camera_obj)
         self.camera = Camera(obj, inner_size=(obj.width * 3, obj.height * 2))

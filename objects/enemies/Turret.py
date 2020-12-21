@@ -16,10 +16,11 @@ class Turret(StaticLevelObject, ObjectWithHealth):
     ANIMATION = Properties.ANIMATION
     CAN_COLLIDE = True
     GROUP_NAME = 'turret'
-    SHOOT_PERIOD = 50
+    SHOOT_PERIOD = 30
     OFFSET_Y = 18
     DAMAGEABLE = True
     HEALTH = Properties.HEALTH
+    SCORE = 300
 
     def __init__(self, scene, cell_x, cell_y, *groups, shoot_period=SHOOT_PERIOD):
         super().__init__(scene, cell_x, cell_y, *groups)
@@ -32,8 +33,9 @@ class Turret(StaticLevelObject, ObjectWithHealth):
 
     def process_logic(self, events):
         if self.is_dead():
+            self.scene.get_object('score').add(self.SCORE)
             self.kill()
-        player = self.scene.get_object('main_character')
+        player = self.scene.get_object('player')
         if player.get_middle_x() <= self.get_middle_x():
             self.direction_x = DirectionX.LEFT
         else:

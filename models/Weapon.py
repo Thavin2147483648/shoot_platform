@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from constants import MainCharacter, Bullet as BulletProperties
+from constants import Player, Bullet as BulletProperties
 from enums import DirectionX
 from functions import is_intersection
 from models.Float import Float
@@ -21,7 +21,7 @@ class Weapon(ABC):
         self.last_frames = 0
 
     def get_animation(self):
-        return MainCharacter.ANIMATION
+        return Player.ANIMATION
 
     @abstractmethod
     def fire(self):
@@ -66,7 +66,7 @@ class Pistol(Weapon):
     AMMO_INDICATOR_COLUMN_SIZE = 8
 
     def get_animation(self):
-        path = MainCharacter.ANIMATION_PATH + '/weapon/pistol'
+        path = Player.ANIMATION_PATH + '/weapon/pistol'
         dct = {
             'none_left': ((path + '/walk_left_1.png', 1),),
             'none_right': ((path + '/walk_right_1.png', 1),),

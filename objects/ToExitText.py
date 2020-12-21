@@ -9,7 +9,7 @@ class ToExitText(PositionalText):
         super().__init__(scene, position_x, position_y, *groups, text="Press E\nto exit level", align=TextAlign.RIGHT)
 
     def can_exit(self):
-        player = self.scene.get_object('main_character')
+        player = self.scene.get_object('player')
         for obj in self.scene.get_objects('exit'):
             if obj.collide_with(player):
                 return True

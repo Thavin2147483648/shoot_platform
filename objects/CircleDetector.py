@@ -37,7 +37,7 @@ class CircleDetector(LevelObject):
         return circle_and_rect_collide(obj.get_rect(), self.get_circle())
 
     def process_logic(self, events):
-        if self.circle_collide_with(self.scene.get_object('main_character')):
+        if self.circle_collide_with(self.scene.get_object('player')):
             self.animation.set_animation('detected')
         else:
             self.animation.set_animation('none')

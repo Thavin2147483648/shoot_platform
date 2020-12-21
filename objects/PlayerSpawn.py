@@ -1,7 +1,7 @@
 import pygame as pg
 from models.LevelObject import StaticLevelObject
 from enums import LevelObjectCellPositionX as PositionX, LevelObjectCellPositionY as PositionY
-from constants import MainCharacter, PlayerSpawn as Properties
+from constants import Player, PlayerSpawn as Properties
 
 
 class PlayerSpawn(StaticLevelObject):

@@ -6,7 +6,7 @@ from models.Float import Float
 from models.GameObject import PositionalGameObject
 from models.BarIndicator import BarIndicator
 from enums import PositionX, PositionY
-from constants import HealthIndicator as Properties, MainCharacter
+from constants import HealthIndicator as Properties, Player
 
 
 class HealthIndicator(PositionalGameObject):
@@ -15,17 +15,17 @@ class HealthIndicator(PositionalGameObject):
     GROUP_NAME = 'health_indicator'
 
     def __init__(self, scene, *groups, position_x=PositionX.LEFT, position_y=PositionY.BOTTOM,
-                 current=MainCharacter.HEALTH):
+                 current=Player.HEALTH):
         super().__init__(scene, position_x, position_y, *groups)
         bar_color = BarIndicatorColor(*Properties.BAR_COLOR)
-        self.max = MainCharacter.HEALTH
+        self.max = Player.HEALTH
         self.current = current
         self.icon = pg.image.load(Properties.ICON_IMAGE)
         self.icon_width = Properties.ICON_WIDTH
         self.icon_height = Properties.ICON_HEIGHT
         self.icon_bar_offset = Properties.ICON_BAR_OFFSET
         self.bar = BarIndicator(Properties.BAR_WIDTH, Properties.BAR_HEIGHT, bar_color, Properties.BAR_BORDER_SIZE,
-                                MainCharacter.HEALTH, current)
+                                Player.HEALTH, current)
         self.set_current(self.current)
 
     def update_surface(self):
@@ -45,6 +45,6 @@ class HealthIndicator(PositionalGameObject):
         return Float(self.current)
 
     def process_logic(self, events):
-        player = self.scene.get_object('main_character')
+        player = self.scene.get_object('player')
         if player.get_health() != self.get_current():
             self.set_current(player.get_health())
